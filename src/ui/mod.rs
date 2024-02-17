@@ -7,9 +7,9 @@ use crate::color::{Color, ColorFormat, Illuminant, RgbWorkingSpace};
 
 use egui::{
     ecolor,
-    Color32,
     style::{Selection, Widgets},
-    CursorIcon, Id, InnerResponse, LayerId, Order, Rect, Sense, Shape, Stroke, Ui, Vec2, Visuals,
+    Color32, CursorIcon, Id, InnerResponse, LayerId, Order, Rect, Sense, Shape, Stroke, Ui, Vec2,
+    Visuals,
 };
 
 pub const SPACE: f32 = 7.;
