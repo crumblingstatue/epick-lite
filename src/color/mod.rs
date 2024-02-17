@@ -78,9 +78,10 @@ pub fn parse_hex(color: &str) -> Option<(u8, u8, u8)> {
 
 //################################################################################
 
-#[derive(Copy, Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Deserialize, Serialize, Default)]
 #[serde(rename_all = "lowercase")]
 pub enum ColorHarmony {
+    #[default]
     Complementary,
     Triadic,
     Tetradic,
@@ -102,12 +103,6 @@ impl AsRef<str> for ColorHarmony {
             ColorHarmony::Square => "square",
             ColorHarmony::Monochromatic => "monochromatic",
         }
-    }
-}
-
-impl Default for ColorHarmony {
-    fn default() -> Self {
-        ColorHarmony::Complementary
     }
 }
 
@@ -359,7 +354,6 @@ impl Color {
         let step_b = (base_b as f32 / step_total).ceil() as u8;
 
         (0..total)
-            .into_iter()
             .map(|_| {
                 let c = Color32::from_rgb(base_r, base_g, base_b);
                 base_r = base_r.saturating_sub(step_r);
@@ -387,7 +381,6 @@ impl Color {
         let step_b = ((U8_MAX - base_b as f32) / step_total).ceil() as u8;
 
         (0..total)
-            .into_iter()
             .map(|_| {
                 let c = Color32::from_rgb(base_r, base_g, base_b);
                 base_r = base_r.saturating_add(step_r);

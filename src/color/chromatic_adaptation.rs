@@ -2,8 +2,9 @@ use crate::math::Matrix3;
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Copy, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, Deserialize, Serialize, Default)]
 pub enum ChromaticAdaptationMethod {
+    #[default]
     Bradford,
     VonKries,
     XYZScaling,
@@ -45,11 +46,5 @@ impl AsRef<str> for ChromaticAdaptationMethod {
             ChromaticAdaptationMethod::VonKries => "Von Kries",
             ChromaticAdaptationMethod::XYZScaling => "XYZ Scaling",
         }
-    }
-}
-
-impl Default for ChromaticAdaptationMethod {
-    fn default() -> Self {
-        ChromaticAdaptationMethod::Bradford
     }
 }

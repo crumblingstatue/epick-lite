@@ -2,13 +2,14 @@ use crate::color::Xyz;
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, PartialEq, Eq, Copy, Clone, Deserialize, Serialize)]
+#[derive(Debug, PartialEq, Eq, Copy, Clone, Deserialize, Serialize, Default)]
 pub enum Illuminant {
     A,
     B,
     C,
     D50,
     D55,
+    #[default]
     D65,
     D75,
     E,
@@ -58,11 +59,5 @@ impl AsRef<str> for Illuminant {
             F7 => "F7",
             F11 => "F11",
         }
-    }
-}
-
-impl Default for Illuminant {
-    fn default() -> Self {
-        Illuminant::D65
     }
 }

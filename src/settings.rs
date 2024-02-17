@@ -252,9 +252,10 @@ impl Settings {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize, Default)]
 pub enum ColorDisplayFmtEnum {
     #[serde(rename = "hex")]
+    #[default]
     Hex,
     #[serde(rename = "hex-uppercase")]
     HexUppercase,
@@ -264,12 +265,6 @@ pub enum ColorDisplayFmtEnum {
     CssHsl,
     #[serde(rename = "custom")]
     Custom(String),
-}
-
-impl Default for ColorDisplayFmtEnum {
-    fn default() -> Self {
-        ColorDisplayFmtEnum::Hex
-    }
 }
 
 impl AsRef<str> for ColorDisplayFmtEnum {

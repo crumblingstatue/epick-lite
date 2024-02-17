@@ -1,10 +1,11 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(PartialEq, Eq, Debug, Copy, Clone, Deserialize, Serialize)]
+#[derive(PartialEq, Eq, Debug, Copy, Clone, Deserialize, Serialize, Default)]
 #[serde(rename_all = "lowercase")]
 pub enum HarmonyLayout {
     // [ ][ ]
     // [ ][ ]
+    #[default]
     Square,
     // [  ]
     // [  ]
@@ -17,12 +18,6 @@ pub enum HarmonyLayout {
     // --------
     Line,
     Gradient,
-}
-
-impl Default for HarmonyLayout {
-    fn default() -> Self {
-        HarmonyLayout::Square
-    }
 }
 
 impl AsRef<str> for HarmonyLayout {

@@ -19,11 +19,11 @@ use x11rb::protocol::xproto;
 #[cfg(windows)]
 use crate::display_picker::windows::{HWND, SW_SHOWDEFAULT, WS_BORDER, WS_POPUP};
 
-#[cfg(any(target_os = "linux"))]
+#[cfg(target_os = "linux")]
 const ZOOM_IMAGE_WIDTH: u16 = ZOOM_WIN_WIDTH / ZOOM_SCALE as u16;
-#[cfg(any(target_os = "linux"))]
+#[cfg(target_os = "linux")]
 const ZOOM_IMAGE_HEIGHT: u16 = ZOOM_WIN_HEIGHT / ZOOM_SCALE as u16;
-#[cfg(any(target_os = "linux"))]
+#[cfg(target_os = "linux")]
 const ZOOM_WIN_BORDER_WIDTH: u32 = 2;
 #[cfg(any(target_os = "linux", windows))]
 static CURSOR_PICKER_WINDOW_NAME: &str = "epick - cursor picker";
