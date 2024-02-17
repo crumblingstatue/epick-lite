@@ -10,7 +10,7 @@ use crate::{
 };
 use sliders::ColorSliders;
 
-use egui::{color::Hsva, CollapsingHeader, DragValue, Grid, Ui};
+use egui::{ecolor::Hsva, CollapsingHeader, DragValue, Grid, Ui};
 use serde::{Deserialize, Serialize};
 use std::mem;
 

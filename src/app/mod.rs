@@ -12,7 +12,7 @@ use crate::{
     render::{render_gradient, TextureManager},
     save_to_clipboard,
     screen_size::ScreenSize,
-    settings::{self, DEFAULT_PIXELS_PER_POINT},
+    settings::{self},
     ui::{
         colorbox::{ColorBox, COLORBOX_PICK_TOOLTIP},
         colors::*,
@@ -24,8 +24,8 @@ use window::{ExportWindow, HelpWindow, HuesWindow, SettingsWindow, ShadesWindow,
 
 use eframe::{CreationContext, Storage, Theme};
 use egui::{
-    color::Color32, style::Margin, vec2, Button, CollapsingHeader, CursorIcon, Id, Label, Layout,
-    Rgba, RichText, ScrollArea, Ui, Vec2, Visuals,
+    style::Margin, Button, CollapsingHeader, Color32, CursorIcon, Id, Label, Layout, Rgba,
+    RichText, ScrollArea, Ui, Vec2, Visuals,
 };
 use once_cell::sync::{Lazy, OnceCell};
 use serde::{Deserialize, Serialize};
@@ -80,7 +80,8 @@ impl eframe::App for App {
                 tex_manager: &mut tex_manager,
                 frame: Some(frame),
             };
-            ctx.egui.output().cursor_icon = ctx.app.cursor_icon;
+            ctx.egui
+                .output_mut(|out| out.cursor_icon = ctx.app.cursor_icon);
 
             let screen_size = ScreenSize::from(ctx.egui.available_rect());
             if ctx.app.screen_size != screen_size {
@@ -120,7 +121,7 @@ impl eframe::App for App {
                 }
             }
 
-            if ctx.egui.memory().focus().is_none() {
+            if ctx.egui.memory(|mem| mem.focus().is_none()) {
                 self.check_keys_pressed(&mut ctx);
             }
 
@@ -151,10 +152,6 @@ impl eframe::App for App {
             settings::save_global(&ctx.settings, storage);
         }
         storage.flush();
-    }
-
-    fn max_size_points(&self) -> egui::Vec2 {
-        vec2(4096., 8192.)
     }
 }
 
@@ -206,12 +203,13 @@ impl App {
 
         context.egui_ctx.set_fonts(fonts);
 
-        if app_ctx.settings.pixels_per_point == DEFAULT_PIXELS_PER_POINT {
+        // TODO: Fix for egui 0.26
+        /*if app_ctx.settings.pixels_per_point == DEFAULT_PIXELS_PER_POINT {
             app_ctx.settings.pixels_per_point = context
                 .integration_info
                 .native_pixels_per_point
                 .unwrap_or(DEFAULT_PIXELS_PER_POINT);
-        }
+        }*/
 
         CONTEXT.try_insert(RwLock::new(app_ctx)).unwrap();
 
@@ -220,7 +218,7 @@ impl App {
 
     fn check_keys_pressed(&mut self, ctx: &mut FrameCtx) {
         for kb in KEYBINDINGS.iter() {
-            if ctx.egui.input().key_pressed(kb.key()) {
+            if ctx.egui.input(|inp| inp.key_pressed(kb.key())) {
                 let f = kb.binding();
                 f(ctx)
             }
@@ -232,7 +230,7 @@ impl App {
             ui.label("Enter a hex color: ");
             ui.horizontal(|ui| {
                 let resp = ui.text_edit_singleline(&mut ctx.app.picker.hex_color);
-                if (resp.lost_focus() && ui.input().key_pressed(egui::Key::Enter))
+                if (resp.lost_focus() && ui.input(|inp| inp.key_pressed(egui::Key::Enter)))
                     || ui
                         .button(icon::PLAY)
                         .on_hover_text("Use this color")

@@ -27,7 +27,7 @@ impl CustomFormatsWindow {
             .show(ctx, |ui| {
                 let mut replace = false;
                 let keys: Vec<String> = settings.saved_color_formats.keys().cloned().collect();
-                let enter_pressed = ui.input().key_pressed(Key::Enter);
+                let enter_pressed = ui.input(|inp| inp.key_pressed(Key::Enter));
                 egui::Grid::new("custom_formats_grid")
                     .num_columns(4)
                     .show(ui, |ui| {
@@ -52,7 +52,7 @@ impl CustomFormatsWindow {
                             } else {
                                 ui.label(k);
                                 if ui.button(icon::EDIT).clicked() {
-                                    ui.memory().request_focus(text_edit_id);
+                                    ui.memory_mut(|mem| mem.request_focus(text_edit_id));
                                     self.edit_key = k.clone();
                                     self.new_key = k.clone();
                                 }

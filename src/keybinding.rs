@@ -45,7 +45,7 @@ pub fn default_keybindings() -> KeyBindings {
                     description: "toggle the side panel",
                     str_key: "h",
                     key: egui::Key::H,
-                    binding: Box::new(|mut ctx| {
+                    binding: Box::new(|ctx| {
                         ctx.app.sidepanel.show = !ctx.app.sidepanel.show;
                     }),
                 },

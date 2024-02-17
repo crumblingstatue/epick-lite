@@ -3,7 +3,7 @@ use crate::{
     color::{rgb::Rgb, CIEColor, Cmyk, Color, Hsl, Xyz},
     math,
 };
-use egui::color::{Color32, Hsva, Rgba};
+use egui::ecolor::{Color32, Hsva, Rgba};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Debug, PartialEq, Deserialize, Serialize)]

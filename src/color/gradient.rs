@@ -1,6 +1,6 @@
 use crate::color::Color;
 use egui::{
-    color::{Color32, Rgba},
+    ecolor::{Color32, Rgba},
     lerp,
 };
 

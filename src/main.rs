@@ -2,14 +2,12 @@ const APP_CANVAS_ID: &str = "epick - Color Picker";
 
 #[cfg(not(target_arch = "wasm32"))]
 fn main() {
-    use eframe::{IconData, NativeOptions};
-    use image::{io::Reader as ImageReader, ImageFormat};
-    use std::io::Cursor;
+    use eframe::NativeOptions;
 
-    const APP_ICON_DATA: &[u8] = include_bytes!("../assets/icon.png");
+    /*const APP_ICON_DATA: &[u8] = include_bytes!("../assets/icon.png");
     const APP_ICON_WIDTH: u32 = 48;
-    const APP_ICON_HEIGHT: u32 = APP_ICON_WIDTH;
-    let mut opts = NativeOptions::default();
+    const APP_ICON_HEIGHT: u32 = APP_ICON_WIDTH;*/
+    let opts = NativeOptions::default();
 
     //pretty_env_logger::init();
     //let subscriber = tracing_subscriber::fmt()
@@ -21,7 +19,8 @@ fn main() {
     //.finish();
     //tracing::subscriber::set_global_default(subscriber).unwrap();
 
-    let mut img = ImageReader::new(Cursor::new(APP_ICON_DATA));
+    // TODO: Fix for egui 0.26
+    /*let mut img = ImageReader::new(Cursor::new(APP_ICON_DATA));
     img.set_format(ImageFormat::Png);
     match img
         .decode()
@@ -38,9 +37,9 @@ fn main() {
             eprintln!("failed to load app icon data - {}", e);
         }
         _ => {}
-    }
+    }*/
 
-    eframe::run_native(APP_CANVAS_ID, opts, Box::new(|ctx| epick::Epick::init(ctx)))
+    eframe::run_native(APP_CANVAS_ID, opts, Box::new(|ctx| epick::Epick::init(ctx))).unwrap();
 }
 
 #[cfg(target_arch = "wasm32")]

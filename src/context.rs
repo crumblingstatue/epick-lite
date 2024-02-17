@@ -300,9 +300,10 @@ impl<'frame> FrameCtx<'frame> {
     }
 
     #[cfg(not(target_arch = "wasm32"))]
-    pub fn set_window_size(&mut self, size: egui::Vec2) {
-        if let Some(frame) = &mut self.frame {
-            frame.set_window_size(size);
+    pub fn set_window_size(&mut self, _size: egui::Vec2) {
+        if let Some(_frame) = &mut self.frame {
+            // TODO: Fix for egui 0.26
+            //frame.set_window_size(size);
         }
     }
 

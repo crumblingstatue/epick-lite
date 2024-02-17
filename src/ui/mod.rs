@@ -6,8 +6,8 @@ pub mod slider_2d;
 use crate::color::{Color, ColorFormat, Illuminant, RgbWorkingSpace};
 
 use egui::{
-    color,
-    color::Color32,
+    ecolor,
+    Color32,
     style::{Selection, Widgets},
     CursorIcon, Id, InnerResponse, LayerId, Order, Rect, Sense, Shape, Stroke, Ui, Vec2, Visuals,
 };
@@ -76,7 +76,7 @@ pub mod colors {
     pub static L_FG_0: Lazy<Color32> = Lazy::new(|| *D_BG_0);
 }
 use colors::*;
-use epaint::Shadow;
+use egui::epaint::Shadow;
 
 #[derive(Default, Debug)]
 pub struct DragInfo {
@@ -85,7 +85,7 @@ pub struct DragInfo {
 }
 
 pub fn drag_source(ui: &mut Ui, id: Id, body: impl FnOnce(&mut Ui)) {
-    let is_being_dragged = ui.memory().is_being_dragged(id);
+    let is_being_dragged = ui.memory(|mem| mem.is_being_dragged(id));
 
     if !is_being_dragged {
         let response = ui.scope(body).response;
@@ -93,10 +93,10 @@ pub fn drag_source(ui: &mut Ui, id: Id, body: impl FnOnce(&mut Ui)) {
         // Check for drags:
         let response = ui.interact(response.rect, id, Sense::drag());
         if response.hovered() {
-            ui.output().cursor_icon = CursorIcon::Grab;
+            ui.output_mut(|out| out.cursor_icon = CursorIcon::Grab);
         }
     } else {
-        ui.output().cursor_icon = CursorIcon::Grabbing;
+        ui.output_mut(|out| out.cursor_icon = CursorIcon::Grabbing);
 
         // Paint the body to a new layer:
         let layer_id = LayerId::new(Order::Tooltip, id);
@@ -121,7 +121,7 @@ pub fn drop_target<R>(
     can_accept_what_is_being_dragged: bool,
     body: impl FnOnce(&mut Ui) -> R,
 ) -> InnerResponse<R> {
-    let is_being_dragged = ui.memory().is_anything_being_dragged();
+    let is_being_dragged = ui.memory(|mem| mem.is_anything_being_dragged());
 
     let margin = Vec2::splat(4.0);
 
@@ -143,17 +143,19 @@ pub fn drop_target<R>(
     let mut stroke = style.bg_stroke;
     if is_being_dragged && !can_accept_what_is_being_dragged {
         // gray out:
-        fill = color::tint_color_towards(fill, ui.visuals().window_fill());
-        stroke.color = color::tint_color_towards(stroke.color, ui.visuals().window_fill());
+        fill = ecolor::tint_color_towards(fill, ui.visuals().window_fill());
+        stroke.color = ecolor::tint_color_towards(stroke.color, ui.visuals().window_fill());
     }
 
     ui.painter().set(
         where_to_put_background,
-        epaint::RectShape {
+        egui::epaint::RectShape {
             rounding: style.rounding,
             fill,
             stroke,
             rect,
+            fill_texture_id: egui::TextureId::Managed(0),
+            uv: Rect::ZERO,
         },
     );
 

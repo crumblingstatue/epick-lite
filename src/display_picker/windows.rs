@@ -4,7 +4,7 @@ use std::ptr::null;
 
 use crate::{color::Color, display_picker::DisplayPicker};
 use anyhow::{Context, Error, Result};
-use egui::Color32;
+use egui::ecolor32;
 use windows::{
     core::PCWSTR,
     Win32::{

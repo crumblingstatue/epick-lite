@@ -260,12 +260,12 @@ impl App {
                         });
                         ctx.app.sidepanel.box_width = box_response.response.rect.width();
                     });
-                    if ui.memory().is_being_dragged(color_id) {
+                    if ui.memory(|mem| mem.is_being_dragged(color_id)) {
                         src_row = Some(idx);
                     }
                 })
                 .response;
-                let is_being_dragged = ui.memory().is_anything_being_dragged();
+                let is_being_dragged = ui.memory(|mem| mem.is_anything_being_dragged());
                 if is_being_dragged && resp.hovered() {
                     dst_row = Some(idx);
                 }
@@ -274,7 +274,7 @@ impl App {
 
         if let Some(src_row) = src_row {
             if let Some(dst_row) = dst_row {
-                if ui.input().pointer.any_released() {
+                if ui.input(|inp| inp.pointer.any_released()) {
                     let palette = &mut ctx.app.palettes.current_mut().palette;
                     if let Some(it) = palette.remove_pos(src_row) {
                         palette.insert(dst_row, it);

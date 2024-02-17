@@ -1,4 +1,4 @@
-use egui::color::{Color32, Hsva, Rgba};
+use egui::ecolor::{Color32, Hsva, Rgba};
 
 use crate::{
     color::{hsv::Hsv, rgb::Rgb, CIEColor, Color, Hsl, Xyz},

@@ -8,7 +8,7 @@ use crate::ui::colors::*;
 
 pub use custom_formats::CustomFormatsWindow;
 use egui::{style::Margin, Frame, Rounding, Slider, Stroke, Ui};
-use epaint::Shadow;
+use egui::epaint::Shadow;
 pub use export::ExportWindow;
 pub use help::HelpWindow;
 pub use palette_formats::PaletteFormatsWindow;

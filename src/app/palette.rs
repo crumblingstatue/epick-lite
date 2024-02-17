@@ -42,7 +42,7 @@ impl App {
             for (i, palette) in ctx.app.palettes.clone().iter().enumerate() {
                 let active = current == i;
                 let resp = self.display_palette(palette, active, ctx, ui);
-                if ctx.egui.memory().is_anything_being_dragged() {
+                if ctx.egui.memory(|mem| mem.is_anything_being_dragged()) {
                     if resp.inner.is_drag_source {
                         palette_src_row = Some(i);
                     } else if resp.inner.is_drop_target {
@@ -52,7 +52,7 @@ impl App {
             }
             if let Some(src_row) = palette_src_row {
                 if let Some(dst_row) = palette_dst_row {
-                    if ui.input().pointer.any_released() {
+                    if ui.input(|inp| inp.pointer.any_released()) {
                         ctx.app.palettes.swap(src_row, dst_row);
                         ctx.app.palettes.move_to_idx(dst_row);
                     }
@@ -75,7 +75,7 @@ impl App {
             ui.horizontal(|ui| {
                 self.display_palette_buttons(palette, ctx, ui);
                 drag_source(ui, palette_id, |ui| {
-                    if ui.memory().is_being_dragged(palette_id) {
+                    if ui.memory(|mem| mem.is_being_dragged(palette_id)) {
                         is_drag_source = true;
                     }
                     let mut label = RichText::new(&palette.name);
@@ -91,7 +91,7 @@ impl App {
             });
             DragInfo::default()
         });
-        let is_being_dragged = ui.memory().is_anything_being_dragged();
+        let is_being_dragged = ui.memory(|mem| mem.is_anything_being_dragged());
         if is_being_dragged && resp.response.hovered() {
             is_drop_target = true;
         }
@@ -176,18 +176,18 @@ impl App {
                                 cb.display(ctx, ui);
                             });
                         });
-                        if ui.memory().is_being_dragged(color_id) {
+                        if ui.memory(|mem| mem.is_being_dragged(color_id)) {
                             color_src_row = Some(i);
                         }
                     });
-                    let is_being_dragged = ui.memory().is_anything_being_dragged();
+                    let is_being_dragged = ui.memory(|mem| mem.is_anything_being_dragged());
                     if is_being_dragged && resp.response.hovered() {
                         color_dst_row = Some(i);
                     }
                 }
                 if let Some(src_row) = color_src_row {
                     if let Some(dst_row) = color_dst_row {
-                        if ui.input().pointer.any_released() {
+                        if ui.input(|inp| inp.pointer.any_released()) {
                             ctx.app.palettes.move_to_name(&palette.name);
                             let palette = &mut ctx.app.palettes.current_mut().palette;
                             if let Some(it) = palette.remove_pos(src_row) {

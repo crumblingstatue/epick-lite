@@ -36,7 +36,7 @@ pub use xyy::xyY;
 pub use xyz::Xyz;
 
 use crate::color::format::CustomColorFormat;
-use egui::color::{Color32, Hsva, HsvaGamma, Rgba};
+use egui::ecolor::{Color32, Hsva, HsvaGamma, Rgba};
 use serde::{Deserialize, Serialize};
 
 pub const CIE_E: f32 = 216. / 24389.;

@@ -5,7 +5,7 @@ use crate::{
 };
 
 use anyhow::Result;
-use egui::{color::Color32, ComboBox, CursorIcon, Window};
+use egui::{Color32, ComboBox, CursorIcon, Window};
 use std::{env, fs, path::PathBuf};
 
 #[cfg(not(target_arch = "wasm32"))]

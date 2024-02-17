@@ -4,7 +4,7 @@ use crate::{
     math::Matrix1x3,
 };
 use egui::{
-    color::{Hsva, HsvaGamma},
+    ecolor::{Hsva, HsvaGamma},
     Color32, Rgba,
 };
 use serde::{Deserialize, Serialize};

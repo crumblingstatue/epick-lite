@@ -1,5 +1,5 @@
 use crate::color::{hsv::Hsv, rgb::Rgb, CIEColor, Cmyk, Color, Xyz};
-use egui::color::{Color32, Hsva, Rgba};
+use egui::ecolor::{Color32, Hsva, Rgba};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Debug, PartialEq, Deserialize, Serialize)]
