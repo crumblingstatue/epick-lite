@@ -69,18 +69,16 @@ impl ZoomPicker {
             if let Ok(color) = picker.get_color_under_cursor() {
                 ctx.app.cursor_pick_color = color;
                 ui.horizontal(|ui| {
-                    ui.label("Color at cursor: ");
-                    self.zoom_picker_impl(ctx, ui, picker);
-                });
-                let cb = ColorBox::builder()
-                    .size((CURRENT_COLOR_BOX_SIZE, CURRENT_COLOR_BOX_SIZE))
-                    .color(color)
-                    .label(true)
-                    .hover_help(COLORBOX_PICK_TOOLTIP)
-                    .border(true)
-                    .build();
-                ui.horizontal(|ui| {
+                    let cb = ColorBox::builder()
+                        .size((CURRENT_COLOR_BOX_SIZE, CURRENT_COLOR_BOX_SIZE))
+                        .color(color)
+                        .label(true)
+                        .hover_help(COLORBOX_PICK_TOOLTIP)
+                        .border(true)
+                        .build();
                     cb.display(ctx, ui);
+                    ui.label("At cursor");
+                    self.zoom_picker_impl(ctx, ui, picker);
                 });
             }
         };

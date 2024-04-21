@@ -481,7 +481,15 @@ impl App {
             }
             ui.vertical(|ui| {
                 ui.horizontal(|ui| {
-                    ui.label("Current color: ");
+                    let cb = ColorBox::builder()
+                        .size((CURRENT_COLOR_BOX_SIZE, CURRENT_COLOR_BOX_SIZE))
+                        .color(ctx.app.picker.current_color)
+                        .label(true)
+                        .hover_help(COLORBOX_PICK_TOOLTIP)
+                        .border(true)
+                        .build();
+                    cb.display(ctx, ui);
+                    ui.label("Current");
                     if ui
                         .button(icon::COPY)
                         .on_hover_text("Copy color to clipboard")
@@ -505,16 +513,6 @@ impl App {
                     {
                         ctx.app.add_cur_color();
                     }
-                });
-                let cb = ColorBox::builder()
-                    .size((CURRENT_COLOR_BOX_SIZE, CURRENT_COLOR_BOX_SIZE))
-                    .color(ctx.app.picker.current_color)
-                    .label(true)
-                    .hover_help(COLORBOX_PICK_TOOLTIP)
-                    .border(true)
-                    .build();
-                ui.horizontal(|ui| {
-                    cb.display(ctx, ui);
                 });
 
                 self.zoom_picker.display(ctx, ui);
