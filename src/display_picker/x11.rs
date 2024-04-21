@@ -13,7 +13,6 @@ use x11rb::{
         Arc, AtomEnum, ConfigureWindowAux, ConnectionExt, CreateGCAux, CreateWindowAux, EventMask,
         Gcontext, Gravity, PropMode, Screen, Window, WindowClass,
     },
-    resource_manager::Database,
     rust_connection::RustConnection,
     wrapper::ConnectionExt as _,
 };
@@ -170,7 +169,9 @@ impl X11Conn {
         width: u16,
         height: u16,
     ) -> Result<Image> {
-        Image::get(&self.conn, window, x, y, width, height).context("failed to get image")
+        Image::get(&self.conn, window, x, y, width, height)
+            .map(|tup| tup.0)
+            .context("failed to get image")
     }
 
     pub fn get_cursor_xy(&self, window: Window) -> Result<(i16, i16)> {
@@ -222,7 +223,7 @@ impl X11Conn {
             .conn
             .generate_id()
             .context("failed to generate gc ID")?;
-        let resource_db = Database::new_from_default(&self.conn)
+        let resource_db = x11rb::resource_manager::new_from_default(&self.conn)
             .context("failed to initialize resource database")?;
         let cursor_handle = CursorHandle::new(&self.conn, screen_num, &resource_db)
             .context("failed to aquire cursor handle")?;
