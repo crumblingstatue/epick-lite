@@ -80,8 +80,6 @@ impl Default for AppCtx {
     }
 }
 impl AppCtx {
-    pub const KEY: &'static str = "app-global-ctx";
-
     /// Initialize a new context
     pub fn new(context: &CreationContext) -> Self {
         Self {
@@ -244,17 +242,9 @@ impl<'frame> FrameCtx<'frame> {
         Some(self.egui.tex_manager())
     }
 
-    pub fn is_dark_mode(&self) -> bool {
-        self.app.settings.is_dark_mode
-    }
-
     pub fn set_dark_theme(&mut self) {
         self.app.settings.is_dark_mode = true;
         self.egui.set_visuals(DARK_VISUALS.clone());
-    }
-
-    pub fn set_theme(&mut self) {
-        self.set_dark_theme();
     }
 
     pub fn set_styles(&mut self, screen_size: ScreenSize) {

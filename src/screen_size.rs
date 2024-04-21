@@ -9,26 +9,6 @@ pub enum ScreenSize {
     Desktop(f32, f32),
 }
 
-impl ScreenSize {
-    pub fn width(&self) -> f32 {
-        match &self {
-            ScreenSize::Phone(w, _) => *w,
-            ScreenSize::Tablet(w, _) => *w,
-            ScreenSize::Laptop(w, _) => *w,
-            ScreenSize::Desktop(w, _) => *w,
-        }
-    }
-
-    pub fn height(&self) -> f32 {
-        match &self {
-            ScreenSize::Phone(_, h) => *h,
-            ScreenSize::Tablet(_, h) => *h,
-            ScreenSize::Laptop(_, h) => *h,
-            ScreenSize::Desktop(_, h) => *h,
-        }
-    }
-}
-
 impl From<Rect> for ScreenSize {
     fn from(screen: Rect) -> Self {
         match screen.width().round() as u32 {

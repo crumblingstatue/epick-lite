@@ -1,6 +1,6 @@
 use crate::color::NamedPalette;
 
-use anyhow::{anyhow, Context, Result};
+use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
 use std::{
     fs,
@@ -20,7 +20,6 @@ impl Default for Palettes {
 }
 
 impl Palettes {
-    pub const STORAGE_KEY: &'static str = "epick.saved.palettes";
     pub const FILE_NAME: &'static str = "palettes.json";
 
     pub fn new(palette: NamedPalette) -> Self {
@@ -44,19 +43,8 @@ impl Palettes {
         unsafe { self.palettes.get_unchecked_mut(self.current_idx) }
     }
 
-    pub fn nth(&self, n: usize) -> Option<&NamedPalette> {
-        self.palettes.get(n)
-    }
-
     pub fn len(&self) -> usize {
         self.palettes.len()
-    }
-
-    /// Moves current index to the next palette if such exists
-    pub fn next(&mut self) {
-        if self.current_idx < self.palettes.len() - 1 {
-            self.current_idx += 1;
-        }
     }
 
     /// Moves current index to the previous palette
@@ -102,15 +90,6 @@ impl Palettes {
         false
     }
 
-    pub fn insert(&mut self, i: usize, palette: NamedPalette) {
-        if !self.palettes.iter().any(|p| p.name == palette.name) {
-            self.palettes.insert(i, palette);
-            if i <= self.current_idx {
-                self.next();
-            }
-        }
-    }
-
     pub fn remove_pos(&mut self, i: usize) -> Option<NamedPalette> {
         if i < self.palettes.len() {
             let removed = self.palettes.remove(i);
@@ -149,33 +128,11 @@ impl Palettes {
         serde_json::from_slice(&data).context("failed to deserialize saved colors file")
     }
 
-    pub fn load_from_storage(storage: &dyn eframe::Storage) -> Result<Self> {
-        if let Some(json) = storage.get_string(Self::STORAGE_KEY) {
-            Self::from_json_str(&json)
-        } else {
-            Err(anyhow!("palettes not found in storage"))
-        }
-    }
-
-    pub fn from_json_str(json: &str) -> Result<Self> {
-        serde_json::from_str(json).context("failed to deserialize saved colors from json")
-    }
-
-    pub fn as_json_str(&self) -> Result<String> {
-        serde_json::to_string(&self).context("failed to serialize saved colors as json")
-    }
-
     /// Saves this colors as json file in the provided `path`.
     pub fn save(&self, path: impl AsRef<Path>) -> Result<()> {
         let mut data = Vec::with_capacity(128);
         serde_json::to_writer(&mut data, &self).context("failed to serialize saved colors")?;
         fs::write(path, &data).context("failed to write saved colors to a file")
-    }
-
-    pub fn save_to_storage(&self, storage: &mut dyn eframe::Storage) -> Result<()> {
-        self.as_json_str().map(|json| {
-            storage.set_string(Palettes::STORAGE_KEY, json);
-        })
     }
 
     /// Returns system directory where saved colors should be placed joined by the `name` parameter.

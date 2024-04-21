@@ -73,28 +73,12 @@ pub fn add_border<'a>(img: &'a Image, color: &Rgba<u8>, width: u32) -> Result<Im
 }
 
 pub enum WindowType {
-    Desktop,
-    Dock,
-    Toolbar,
-    Menu,
-    Utility,
-    Splash,
-    Dialog,
-    Normal,
     Notification,
 }
 
 impl WindowType {
     fn wm_property(&self) -> &[u8] {
         match &self {
-            WindowType::Desktop => b"_NET_WM_WINDOW_TYPE_DESKTOP",
-            WindowType::Dock => b"_NET_WM_WINDOW_TYPE_DOCK",
-            WindowType::Toolbar => b"_NET_WM_WINDOW_TYPE_TOOLBAR",
-            WindowType::Menu => b"_NET_WM_WINDOW_TYPE_MENU",
-            WindowType::Utility => b"_NET_WM_WINDOW_TYPE_UTILITY",
-            WindowType::Splash => b"_NET_WM_WINDOW_TYPE_SPLASH",
-            WindowType::Dialog => b"_NET_WM_WINDOW_TYPE_DIALOG",
-            WindowType::Normal => b"_NET_WM_WINDOW_TYPE_NORMAL",
             WindowType::Notification => b"_NET_WM_WINDOW_TYPE_NOTIFICATION",
         }
     }

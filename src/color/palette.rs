@@ -83,14 +83,6 @@ impl Palette {
         self.0.clear()
     }
 
-    pub fn swap(&mut self, a: usize, b: usize) {
-        self.0.swap(a, b);
-    }
-
-    pub fn is_empty(&self) -> bool {
-        self.0.is_empty()
-    }
-
     pub fn as_gimp_palette(&self, name: &str) -> String {
         let mut gpl = format!("GIMP Palette\nName: {}.gpl\nColumns: 1\n#\n", name);
         for (i, color) in self.0.iter().enumerate() {
