@@ -5,7 +5,7 @@ use crate::{
     ui::{colors::*, drag_source, drop_target, icon, HALF_SPACE, SPACE},
 };
 
-use egui::{style::Margin, vec2, CursorIcon, Id, Label, RichText, ScrollArea, Ui};
+use egui::{vec2, CursorIcon, Id, Label, Margin, RichText, ScrollArea, Ui};
 
 impl App {
     const MAX_NAME_LEN: usize = 15;

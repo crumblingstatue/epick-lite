@@ -121,7 +121,7 @@ pub fn drop_target<R>(
     can_accept_what_is_being_dragged: bool,
     body: impl FnOnce(&mut Ui) -> R,
 ) -> InnerResponse<R> {
-    let is_being_dragged = ui.memory(|mem| mem.is_anything_being_dragged());
+    let is_being_dragged = ui.ctx().dragged_id().is_some();
 
     let margin = Vec2::splat(4.0);
 
@@ -197,7 +197,7 @@ pub fn light_visuals() -> Visuals {
             bg_fill: *L_BG_5,
             stroke: Stroke::new(0.7, *D_BG_0),
         },
-        popup_shadow: Shadow::small_light(),
+        popup_shadow: Shadow::NONE,
         widgets,
         ..Default::default()
     }
@@ -217,7 +217,7 @@ pub fn dark_visuals() -> Visuals {
             bg_fill: *D_BG_3_TRANSPARENT,
             stroke: Stroke::new(0.7, *D_FG_0),
         },
-        popup_shadow: Shadow::small_dark(),
+        popup_shadow: Shadow::NONE,
         widgets,
         ..Default::default()
     }

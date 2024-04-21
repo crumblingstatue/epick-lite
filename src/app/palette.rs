@@ -42,7 +42,7 @@ impl App {
             for (i, palette) in ctx.app.palettes.clone().iter().enumerate() {
                 let active = current == i;
                 let resp = self.display_palette(palette, active, ctx, ui);
-                if ctx.egui.memory(|mem| mem.is_anything_being_dragged()) {
+                if ctx.egui.dragged_id().is_some() {
                     if resp.inner.is_drag_source {
                         palette_src_row = Some(i);
                     } else if resp.inner.is_drop_target {

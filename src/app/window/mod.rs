@@ -7,7 +7,7 @@ mod settings;
 use crate::ui::colors::*;
 
 pub use custom_formats::CustomFormatsWindow;
-use egui::{epaint::Shadow, style::Margin, Frame, Rounding, Slider, Stroke, Ui};
+use egui::{epaint::Shadow, Frame, Margin, Rounding, Slider, Stroke, Ui};
 pub use export::ExportWindow;
 pub use help::HelpWindow;
 pub use palette_formats::PaletteFormatsWindow;
@@ -26,9 +26,9 @@ pub fn default_frame(is_dark_mode: bool) -> Frame {
         inner_margin: Margin::symmetric(15., 15.),
         rounding: Rounding::same(5.),
         shadow: if is_dark_mode {
-            Shadow::big_dark()
+            Shadow::NONE
         } else {
-            Shadow::big_light()
+            Shadow::NONE
         },
         stroke: if is_dark_mode {
             Stroke::new(2., *D_BG_00)

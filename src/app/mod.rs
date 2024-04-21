@@ -24,8 +24,8 @@ use window::{ExportWindow, HelpWindow, HuesWindow, SettingsWindow, ShadesWindow,
 
 use eframe::{CreationContext, Storage, Theme};
 use egui::{
-    style::Margin, Button, CollapsingHeader, Color32, CursorIcon, Id, Label, Layout, Rgba,
-    RichText, ScrollArea, Ui, Vec2, Visuals,
+    Button, CollapsingHeader, Color32, CursorIcon, Id, Label, Layout, Margin, Rgba, RichText,
+    ScrollArea, Ui, Vec2, Visuals,
 };
 use once_cell::sync::{Lazy, OnceCell};
 use serde::{Deserialize, Serialize};
@@ -121,7 +121,7 @@ impl eframe::App for App {
                 }
             }
 
-            if ctx.egui.memory(|mem| mem.focus().is_none()) {
+            if ctx.egui.memory(|mem| mem.focused().is_none()) {
                 self.check_keys_pressed(&mut ctx);
             }
 
