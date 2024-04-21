@@ -132,7 +132,7 @@ impl eframe::App for App {
                 // gets updated even when the pointer is not in the egui window area.
                 ctx.egui.request_repaint();
 
-                if ctx.app.zoom_window_dragged {
+                if ctx.app.show_zoom_window {
                     // When zooming we want to continually repaint for smooth experience
                     // even if the pointer is not over main window area
                     return;

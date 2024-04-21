@@ -237,19 +237,12 @@ impl ZoomPicker {
         ui: &mut Ui,
         picker: Rc<dyn DisplayPickerExt>,
     ) {
-        let btn = Button::new(icon::ZOOM_PICKER).sense(egui::Sense::drag());
-        let btn = ui
-            .add(btn)
-            .on_hover_cursor(CursorIcon::ZoomIn)
-            .on_hover_text("Drag to enable zoomed window");
+        ui.checkbox(&mut ctx.app.show_zoom_window, "Show zoom window");
 
-        if btn.dragged() {
-            ctx.app.zoom_window_dragged = true;
+        if ctx.app.show_zoom_window {
             self.display_zoom_window(ctx, &picker);
-        }
-        if !btn.dragged() && !btn.has_focus() {
+        } else {
             self.hide_zoom_window(&picker);
-            ctx.app.zoom_window_dragged = false;
         }
 
         self.handle_zoom_picker(ui, picker);

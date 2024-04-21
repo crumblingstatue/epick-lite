@@ -33,8 +33,7 @@ pub struct AppCtx {
 
     pub sidepanel: SidePanelData,
 
-    /// Is the zoom window currently dragged
-    pub zoom_window_dragged: bool,
+    pub show_zoom_window: bool,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -76,7 +75,7 @@ impl Default for AppCtx {
                 response_size: (0., 0.).into(),
             },
 
-            zoom_window_dragged: false,
+            show_zoom_window: false,
         }
     }
 }
@@ -107,7 +106,7 @@ impl AppCtx {
                 response_size: (0., 0.).into(),
             },
 
-            zoom_window_dragged: false,
+            show_zoom_window: false,
         }
     }
 
