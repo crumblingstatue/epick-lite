@@ -235,7 +235,7 @@ impl ZoomPicker {
         ui: &mut Ui,
         picker: Rc<dyn DisplayPickerExt>,
     ) {
-        ui.checkbox(&mut ctx.app.show_zoom_window, "Show zoom window");
+        ui.checkbox(&mut ctx.app.show_zoom_window, "Zoom window");
 
         if ctx.app.show_zoom_window {
             self.display_zoom_window(ctx, &picker);
