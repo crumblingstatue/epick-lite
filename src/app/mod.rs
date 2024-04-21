@@ -63,6 +63,7 @@ pub struct App {
     pub display_errors: Vec<DisplayError>,
     pub windows: Windows,
     pub zoom_picker: ZoomPicker,
+    pub selected_slider: u8,
 }
 
 impl eframe::App for App {
@@ -163,6 +164,7 @@ impl App {
             display_errors: Default::default(),
             windows: Windows::default(),
             zoom_picker: ZoomPicker::default(),
+            selected_slider: 0,
         });
 
         let prefer_dark = context
@@ -536,31 +538,29 @@ impl App {
     }
 
     fn sliders(&mut self, ctx: &mut FrameCtx<'_>, ui: &mut Ui) {
-        ui.vertical(|ui| {
-            if ctx.app.settings.color_spaces.rgb {
-                ctx.app.picker.rgb_sliders(ui);
-            }
-            if ctx.app.settings.color_spaces.cmyk {
-                ctx.app.picker.cmyk_sliders(ui);
-            }
-            if ctx.app.settings.color_spaces.hsv {
-                ctx.app.picker.hsv_sliders(ui);
-            }
-            if ctx.app.settings.color_spaces.hsl {
-                ctx.app.picker.hsl_sliders(ui);
-            }
-            if ctx.app.settings.color_spaces.luv {
-                ctx.app.picker.luv_sliders(ui);
-            }
-            if ctx.app.settings.color_spaces.lch_uv {
-                ctx.app.picker.lch_uv_sliders(ui);
-            }
-            if ctx.app.settings.color_spaces.lab {
-                ctx.app.picker.lab_sliders(ui);
-            }
-            if ctx.app.settings.color_spaces.lch_ab {
-                ctx.app.picker.lch_ab_sliders(ui);
+        ui.horizontal(|ui| {
+            let sliders = [
+                "RGB", "CMYK", "HSV", "HSL", "LUV", "LCH_UV", "LAB", "LCH_AB",
+            ];
+            for (i, name) in sliders.into_iter().enumerate() {
+                if ui
+                    .selectable_label(self.selected_slider == i as u8, name)
+                    .clicked()
+                {
+                    self.selected_slider = i as u8;
+                }
             }
         });
+        match self.selected_slider {
+            0 => ctx.app.picker.rgb_sliders(ui),
+            1 => ctx.app.picker.cmyk_sliders(ui),
+            2 => ctx.app.picker.hsv_sliders(ui),
+            3 => ctx.app.picker.hsl_sliders(ui),
+            4 => ctx.app.picker.luv_sliders(ui),
+            5 => ctx.app.picker.lch_uv_sliders(ui),
+            6 => ctx.app.picker.lab_sliders(ui),
+            7 => ctx.app.picker.lch_ab_sliders(ui),
+            _ => {}
+        }
     }
 }
