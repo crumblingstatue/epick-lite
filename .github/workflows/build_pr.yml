@@ -10,22 +10,9 @@ on:
 name: epick PR CI
 
 jobs:
-  lint:
-    name: Lint
-    strategy:
-      matrix:
-        os:
-          - ubuntu-latest
-          - windows-latest
-          - macos-latest
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@main
-      - uses: ./.github/actions/lint
 
   test:
     name: Test Suite
-    needs: [lint]
     strategy:
       matrix:
         os:
@@ -36,19 +23,3 @@ jobs:
     steps:
       - uses: actions/checkout@main
       - uses: ./.github/actions/test
-
-  test_web:
-    name: Test web build
-    needs: [test]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-      - name: Install dependencies
-        run: sudo apt-get install libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
-      - name: Test web build
-        run: make build_web

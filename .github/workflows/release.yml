@@ -8,7 +8,6 @@ jobs:
 
   test:
     name: Test Suite
-    needs: [lint]
     strategy:
       matrix:
         os:
