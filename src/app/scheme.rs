@@ -10,7 +10,7 @@ use crate::{
     },
 };
 
-use egui::{vec2, CollapsingHeader, ComboBox, Grid, Slider, Ui, Vec2, Window};
+use egui::{vec2, ComboBox, Grid, Ui, Vec2, Window};
 
 macro_rules! scheme_window_impl {
     ($title:literal, $self:ident, $ctx:ident, $win:ident, $size_field:ident, $colors:expr) => {{
@@ -119,29 +119,17 @@ impl App {
         );
     }
 
-    pub fn harmonies_header(&mut self, ctx: &mut FrameCtx<'_>, ui: &mut Ui) {
-        CollapsingHeader::new("Harmonies")
-            .default_open(true)
-            .show(ui, |ui| {
-                self.harmony_combobox(ctx, ui);
-                self.harmony_layout_combobox(ctx, ui);
-                ui.add(
-                    Slider::new(
-                        &mut ctx.app.settings.harmony_color_size,
-                        20.0..=ui.available_width() / 4.,
-                    )
-                    .clamp_to_range(true)
-                    .text("color size"),
-                );
-                ui.checkbox(
-                    &mut ctx.app.settings.harmony_display_color_label,
-                    "Display color labels",
-                );
-                ui.checkbox(
-                    &mut ctx.app.settings.harmony_display_box,
-                    "Display color box",
-                );
-            });
+    pub fn harmonies_ctl_ui(&mut self, ctx: &mut FrameCtx<'_>, ui: &mut Ui) {
+        ui.horizontal(|ui| {
+            ui.checkbox(&mut ctx.app.settings.harmony_display_box, "Harmonies");
+            self.harmony_combobox(ctx, ui);
+            self.harmony_layout_combobox(ctx, ui);
+            ui.add(
+                egui::DragValue::new(&mut ctx.app.settings.harmony_color_size)
+                    .clamp_range(20.0..=ui.available_width() / 4.),
+            );
+            ui.checkbox(&mut ctx.app.settings.harmony_display_color_label, "labels");
+        });
     }
 
     pub fn display_harmonies(&mut self, ctx: &mut FrameCtx<'_>, ui: &mut Ui) {
@@ -298,7 +286,7 @@ impl App {
     }
 
     fn harmony_layout_combobox(&self, ctx: &mut FrameCtx<'_>, ui: &mut Ui) {
-        ComboBox::from_label("Harmony layout")
+        ComboBox::from_id_source("Layout")
             .selected_text(ctx.app.settings.harmony_layout.as_ref())
             .show_ui(ui, |ui| {
                 ui.selectable_value(
@@ -326,7 +314,7 @@ impl App {
 
     fn harmony_combobox(&self, ctx: &mut FrameCtx<'_>, ui: &mut Ui) {
         let harmony = &mut ctx.app.settings.harmony;
-        ComboBox::from_label("Choose a harmony")
+        ComboBox::from_id_source("Harmony")
             .selected_text(harmony.as_ref())
             .show_ui(ui, |ui| {
                 ui.selectable_value(

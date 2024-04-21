@@ -526,8 +526,11 @@ impl App {
         ScrollArea::vertical()
             .id_source("picker scroll")
             .show(ui, |ui| {
-                self.harmonies_header(ctx, ui);
+                ui.separator();
+                self.harmonies_ctl_ui(ctx, ui);
+                ui.separator();
                 self.sliders(ctx, ui);
+                ui.separator();
                 self.hex_input(ctx, ui);
                 let mut available_space = ui.available_size_before_wrap();
                 if ctx.app.sidepanel.show {
