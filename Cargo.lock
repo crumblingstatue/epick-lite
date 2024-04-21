@@ -1326,7 +1326,6 @@ dependencies = [
  "eframe",
  "egui",
  "image 0.25.1",
- "js-sys",
  "native-dialog",
  "nom",
  "objc",

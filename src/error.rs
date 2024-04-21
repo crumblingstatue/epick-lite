@@ -1,8 +1,6 @@
 use crate::get_timestamp;
 use once_cell::sync::Lazy;
-use std::collections::VecDeque;
-#[cfg(not(target_arch = "wasm32"))]
-use std::sync::Mutex;
+use std::{collections::VecDeque, sync::Mutex};
 
 #[derive(Debug)]
 pub struct DisplayError {
@@ -38,18 +36,10 @@ impl ErrorStack {
     }
 }
 
-#[cfg(not(target_arch = "wasm32"))]
 pub static ERROR_STACK: Lazy<Mutex<ErrorStack>> = Lazy::new(|| Mutex::new(ErrorStack::default()));
-#[cfg(target_arch = "wasm32")]
-pub static mut ERROR_STACK: Lazy<ErrorStack> = Lazy::new(|| ErrorStack::default());
 
 pub fn append_global_error(error: impl std::fmt::Display) {
-    #[cfg(not(target_arch = "wasm32"))]
     if let Ok(mut stack) = ERROR_STACK.try_lock() {
         stack.push(error.to_string());
-    }
-    #[cfg(target_arch = "wasm32")]
-    unsafe {
-        ERROR_STACK.push(error.to_string());
     }
 }

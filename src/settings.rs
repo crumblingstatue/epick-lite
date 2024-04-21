@@ -18,15 +18,6 @@ use std::{
 pub const DEFAULT_PIXELS_PER_POINT: f32 = 1.0;
 
 pub fn load_global(_storage: Option<&dyn eframe::Storage>) -> Option<Settings> {
-    #[cfg(target_arch = "wasm32")]
-    if let Some(storage) = _storage {
-        if let Some(yaml) = storage.get_string(Settings::STORAGE_KEY) {
-            if let Ok(settings) = Settings::from_yaml_str(&yaml) {
-                return Some(settings);
-            }
-        }
-    }
-    #[cfg(not(target_arch = "wasm32"))]
     if let Some(config_dir) = Settings::dir("epick") {
         let path = config_dir.join(Settings::FILE_NAME);
 
@@ -39,11 +30,6 @@ pub fn load_global(_storage: Option<&dyn eframe::Storage>) -> Option<Settings> {
 }
 
 pub fn save_global(settings: &Settings, _storage: &mut dyn Storage) {
-    #[cfg(target_arch = "wasm32")]
-    if let Ok(yaml) = settings.as_yaml_str() {
-        _storage.set_string(Settings::STORAGE_KEY, yaml);
-    }
-    #[cfg(not(target_arch = "wasm32"))]
     if let Some(dir) = Settings::dir("epick") {
         if !dir.exists() {
             let _ = std::fs::create_dir_all(&dir);

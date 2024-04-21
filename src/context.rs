@@ -172,15 +172,6 @@ impl AppCtx {
     /// Load palettes from appropriate location based on the target arch
     pub fn load_palettes(&mut self, _storage: Option<&dyn Storage>) {
         if self.settings.cache_colors {
-            #[cfg(target_arch = "wasm32")]
-            if let Some(storage) = _storage {
-                match Palettes::load_from_storage(storage) {
-                    Ok(palettes) => self.palettes = palettes,
-                    Err(e) => append_global_error(format!("failed to load palettes, {e:?}")),
-                }
-            }
-
-            #[cfg(not(target_arch = "wasm32"))]
             if let Some(path) = Palettes::dir("epick") {
                 match Palettes::load(path.join(Palettes::FILE_NAME)) {
                     Ok(palettes) => self.palettes = palettes,
@@ -192,13 +183,6 @@ impl AppCtx {
 
     /// Save palettes to appropriate location based on the target arch
     pub fn save_palettes(&self, _storage: &mut dyn Storage) {
-        #[cfg(target_arch = "wasm32")]
-        if self.settings.cache_colors {
-            if let Err(e) = self.palettes.save_to_storage(_storage) {
-                append_global_error(format!("failed to save palettes, {e:?}"));
-            }
-        }
-        #[cfg(not(target_arch = "wasm32"))]
         if let Some(dir) = Palettes::dir("epick") {
             if !dir.exists() {
                 let _ = std::fs::create_dir_all(&dir);
@@ -289,14 +273,10 @@ impl<'frame> FrameCtx<'frame> {
         self.egui.set_style(style);
     }
 
-    #[cfg(not(target_arch = "wasm32"))]
     pub fn set_window_size(&mut self, _size: egui::Vec2) {
         if let Some(_frame) = &mut self.frame {
             // TODO: Fix for egui 0.26
             //frame.set_window_size(size);
         }
     }
-
-    #[cfg(target_arch = "wasm32")]
-    pub fn set_window_size(&mut self, _: egui::Vec2) {}
 }

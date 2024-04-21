@@ -1,6 +1,5 @@
 const APP_CANVAS_ID: &str = "epick - Color Picker";
 
-#[cfg(not(target_arch = "wasm32"))]
 fn main() {
     use eframe::NativeOptions;
 
@@ -40,15 +39,4 @@ fn main() {
     }*/
 
     eframe::run_native(APP_CANVAS_ID, opts, Box::new(|ctx| epick::Epick::init(ctx))).unwrap();
-}
-
-#[cfg(target_arch = "wasm32")]
-fn main() {
-    let web_options = eframe::WebOptions::default();
-    eframe::start_web(
-        APP_CANVAS_ID,
-        web_options,
-        Box::new(|ctx| epick::Epick::init(ctx)),
-    )
-    .expect("web started");
 }

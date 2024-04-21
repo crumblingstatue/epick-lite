@@ -12,9 +12,7 @@ use crate::{
 use egui::{Color32, ComboBox, Ui, Window};
 use std::fmt::Display;
 
-#[cfg(not(target_arch = "wasm32"))]
 use egui::CursorIcon;
-#[cfg(not(target_arch = "wasm32"))]
 use std::fs;
 
 use crate::app::window::{CustomFormatsWindow, PaletteFormatsWindow};
@@ -97,9 +95,8 @@ impl SettingsWindow {
         }
     }
 
-    fn save_settings_btn(&mut self, app_ctx: &mut AppCtx, _ui: &mut Ui) {
-        #[cfg(not(target_arch = "wasm32"))]
-        if _ui
+    fn save_settings_btn(&mut self, app_ctx: &mut AppCtx, ui: &mut Ui) {
+        if ui
             .button("Save settings")
             .on_hover_cursor(CursorIcon::PointingHand)
             .clicked()
@@ -385,7 +382,6 @@ impl SettingsWindow {
     }
 
     fn ui_scale_slider(&mut self, app_ctx: &mut AppCtx, ui: &mut Ui) {
-        #[cfg(not(target_arch = "wasm32"))]
         ui.horizontal(|ui| {
             ui.label("UI Scale");
             let mut ppp = app_ctx.settings.pixels_per_point;

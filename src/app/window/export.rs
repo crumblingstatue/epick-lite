@@ -5,11 +5,8 @@ use crate::{
 };
 
 use anyhow::Result;
-use egui::{Color32, ComboBox, CursorIcon, Window};
+use egui::{Color32, ComboBox, CursorIcon, TextEdit, Window};
 use std::{env, fs, path::PathBuf};
-
-#[cfg(not(target_arch = "wasm32"))]
-use egui::TextEdit;
 
 #[derive(Debug)]
 pub struct ExportWindow {
@@ -72,42 +69,35 @@ impl ExportWindow {
                             });
 
                             ui.label("Export path:");
-                            #[cfg(not(target_arch = "wasm32"))]
+                            if ui
+                                .add(
+                                    TextEdit::singleline(&mut self.path)
+                                        .interactive(self.export_path_editable),
+                                )
+                                .clicked()
+                                && !self.export_path_editable
                             {
-                                if ui
-                                    .add(
-                                        TextEdit::singleline(&mut self.path)
-                                            .interactive(self.export_path_editable),
-                                    )
-                                    .clicked()
-                                    && !self.export_path_editable
-                                {
-                                    let location = if let Ok(path) = std::env::current_dir() {
-                                        path.to_string_lossy().to_string()
-                                    } else {
-                                        "".into()
-                                    };
-
-                                    match native_dialog::FileDialog::new()
-                                        .set_location(&location)
-                                        .add_filter("GIMP Palette", &["gpl"])
-                                        .add_filter("Text file", &["txt"])
-                                        .show_save_single_file()
-                                    {
-                                        Ok(Some(path)) => {
-                                            self.path = path.to_string_lossy().to_string()
-                                        }
-                                        Err(_) => {
-                                            self.export_path_editable = true;
-                                        }
-                                        Ok(None) => {}
-                                    }
+                                let location = if let Ok(path) = std::env::current_dir() {
+                                    path.to_string_lossy().to_string()
+                                } else {
+                                    "".into()
                                 };
-                            }
-                            #[cfg(target_arch = "wasm32")]
-                            {
-                                ui.text_edit_singleline(&mut self.path);
-                            }
+
+                                match native_dialog::FileDialog::new()
+                                    .set_location(&location)
+                                    .add_filter("GIMP Palette", &["gpl"])
+                                    .add_filter("Text file", &["txt"])
+                                    .show_save_single_file()
+                                {
+                                    Ok(Some(path)) => {
+                                        self.path = path.to_string_lossy().to_string()
+                                    }
+                                    Err(_) => {
+                                        self.export_path_editable = true;
+                                    }
+                                    Ok(None) => {}
+                                }
+                            };
 
                             match &self.export_status {
                                 Ok(msg) => ui.colored_label(Color32::GREEN, msg),

@@ -103,21 +103,13 @@ impl eframe::App for App {
 
             self.display_windows(&mut ctx);
 
-            #[cfg(not(target_arch = "wasm32"))]
             ctx.set_window_size(ctx.egui.used_size());
 
             ctx.app.picker.check_for_change();
 
-            #[cfg(not(target_arch = "wasm32"))]
             // populate display errors from the global error stack
             if let Ok(mut stack) = ERROR_STACK.try_lock() {
                 while let Some(error) = stack.errors.pop_front() {
-                    self.display_errors.push(error);
-                }
-            }
-            #[cfg(target_arch = "wasm32")]
-            unsafe {
-                while let Some(error) = ERROR_STACK.errors.pop_front() {
                     self.display_errors.push(error);
                 }
             }
@@ -127,7 +119,6 @@ impl eframe::App for App {
             }
 
             // No need to repaint in wasm, there is no way to pick color from under the cursor anyway
-            #[cfg(not(target_arch = "wasm32"))]
             if !ctx.egui.is_pointer_over_area() {
                 // This paint request makes sure that the color displayed as color under cursor
                 // gets updated even when the pointer is not in the egui window area.
