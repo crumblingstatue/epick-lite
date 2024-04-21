@@ -12,5 +12,5 @@ runs:
       run: sudo apt-get install libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev || true
       shell: bash
     - name: Run tests
-      run: make test
+      run: cargo test
       shell: bash
