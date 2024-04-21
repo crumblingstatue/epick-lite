@@ -22,7 +22,7 @@ use crate::{
 };
 use window::{ExportWindow, HelpWindow, HuesWindow, SettingsWindow, ShadesWindow, TintsWindow};
 
-use eframe::{CreationContext, Storage, Theme};
+use eframe::{CreationContext, Storage};
 use egui::{
     Button, CollapsingHeader, Color32, CursorIcon, Id, Label, Layout, Margin, Rgba, RichText,
     ScrollArea, Ui, Vec2, Visuals,
@@ -167,12 +167,6 @@ impl App {
             selected_slider: 0,
         });
 
-        let prefer_dark = context
-            .integration_info
-            .system_theme
-            .map(|t| matches!(t, Theme::Dark))
-            .unwrap_or(true);
-
         if let Ok(mut tex_manager) = TEXTURE_MANAGER.write() {
             let mut ctx = FrameCtx {
                 app: &mut app_ctx,
@@ -183,11 +177,7 @@ impl App {
 
             ctx.app.load_palettes(context.storage);
 
-            if prefer_dark {
-                ctx.set_dark_theme();
-            } else {
-                ctx.set_light_theme();
-            }
+            ctx.set_dark_theme();
         }
 
         let mut fonts = egui::FontDefinitions::default();
@@ -383,25 +373,8 @@ impl App {
                 {
                     self.windows.settings.show = true;
                 }
-                self.dark_light_switch(ctx, ui);
             });
         });
-    }
-
-    fn dark_light_switch(&mut self, ctx: &mut FrameCtx, ui: &mut Ui) {
-        let btn = if ctx.is_dark_mode() {
-            icon::LIGHT_MODE
-        } else {
-            icon::DARK_MODE
-        };
-        if ui
-            .button(btn)
-            .on_hover_text("Switch ui color theme")
-            .on_hover_cursor(CursorIcon::PointingHand)
-            .clicked()
-        {
-            ctx.set_theme();
-        }
     }
 
     fn display_windows(&mut self, ctx: &mut FrameCtx<'_>) {

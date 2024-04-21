@@ -1,5 +1,5 @@
 use crate::{
-    app::{CentralPanelTab, DARK_VISUALS, LIGHT_VISUALS},
+    app::{CentralPanelTab, DARK_VISUALS},
     color::{Color, ColorFormat, Palettes},
     color_picker::ColorPicker,
     error::append_global_error,
@@ -269,17 +269,8 @@ impl<'frame> FrameCtx<'frame> {
         self.egui.set_visuals(DARK_VISUALS.clone());
     }
 
-    pub fn set_light_theme(&mut self) {
-        self.app.settings.is_dark_mode = false;
-        self.egui.set_visuals(LIGHT_VISUALS.clone());
-    }
-
     pub fn set_theme(&mut self) {
-        if self.is_dark_mode() {
-            self.set_light_theme();
-        } else {
-            self.set_dark_theme();
-        }
+        self.set_dark_theme();
     }
 
     pub fn set_styles(&mut self, screen_size: ScreenSize) {
