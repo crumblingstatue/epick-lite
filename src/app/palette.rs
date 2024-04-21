@@ -75,7 +75,7 @@ impl App {
             ui.horizontal(|ui| {
                 self.display_palette_buttons(palette, ctx, ui);
                 drag_source(ui, palette_id, |ui| {
-                    if ui.memory(|mem| mem.is_being_dragged(palette_id)) {
+                    if ctx.egui.is_being_dragged(palette_id) {
                         is_drag_source = true;
                     }
                     let mut label = RichText::new(&palette.name);
@@ -91,7 +91,7 @@ impl App {
             });
             DragInfo::default()
         });
-        let is_being_dragged = ui.memory(|mem| mem.is_anything_being_dragged());
+        let is_being_dragged = ctx.egui.dragged_id().is_some();
         if is_being_dragged && resp.response.hovered() {
             is_drop_target = true;
         }
@@ -176,11 +176,11 @@ impl App {
                                 cb.display(ctx, ui);
                             });
                         });
-                        if ui.memory(|mem| mem.is_being_dragged(color_id)) {
+                        if ctx.egui.is_being_dragged(color_id) {
                             color_src_row = Some(i);
                         }
                     });
-                    let is_being_dragged = ui.memory(|mem| mem.is_anything_being_dragged());
+                    let is_being_dragged = ctx.egui.dragged_id().is_some();
                     if is_being_dragged && resp.response.hovered() {
                         color_dst_row = Some(i);
                     }

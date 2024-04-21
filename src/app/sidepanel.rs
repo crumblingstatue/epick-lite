@@ -260,12 +260,12 @@ impl App {
                         });
                         ctx.app.sidepanel.box_width = box_response.response.rect.width();
                     });
-                    if ui.memory(|mem| mem.is_being_dragged(color_id)) {
+                    if ctx.egui.is_being_dragged(color_id) {
                         src_row = Some(idx);
                     }
                 })
                 .response;
-                let is_being_dragged = ui.memory(|mem| mem.is_anything_being_dragged());
+                let is_being_dragged = ctx.egui.dragged_id().is_some();
                 if is_being_dragged && resp.hovered() {
                     dst_row = Some(idx);
                 }

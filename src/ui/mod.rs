@@ -85,7 +85,7 @@ pub struct DragInfo {
 }
 
 pub fn drag_source(ui: &mut Ui, id: Id, body: impl FnOnce(&mut Ui)) {
-    let is_being_dragged = ui.memory(|mem| mem.is_being_dragged(id));
+    let is_being_dragged = ui.ctx().is_being_dragged(id);
 
     if !is_being_dragged {
         let response = ui.scope(body).response;
@@ -111,7 +111,13 @@ pub fn drag_source(ui: &mut Ui, id: Id, body: impl FnOnce(&mut Ui)) {
 
         if let Some(pointer_pos) = ui.ctx().pointer_interact_pos() {
             let delta = pointer_pos - response.rect.center();
-            ui.ctx().translate_layer(layer_id, delta);
+            ui.ctx().transform_layer_shapes(
+                layer_id,
+                egui::emath::TSTransform {
+                    scaling: 1.0,
+                    translation: delta,
+                },
+            );
         }
     }
 }
