@@ -121,7 +121,7 @@ impl AppCtx {
                 degree_symbol: true,
             },
             ColorDisplayFmtEnum::Custom(ref name) => {
-                if self.settings.saved_color_formats.get(name).is_some() {
+                if self.settings.saved_color_formats.contains_key(name) {
                     ColorFormat::Custom(&self.settings.saved_color_formats[name])
                 } else {
                     append_global_error(format!("Custom color format `{name}` not found"));
@@ -155,7 +155,7 @@ impl AppCtx {
                 degree_symbol: false,
             },
             ColorDisplayFmtEnum::Custom(name) => {
-                if self.settings.saved_color_formats.get(name).is_some() {
+                if self.settings.saved_color_formats.contains_key(name) {
                     ColorFormat::Custom(&self.settings.saved_color_formats[name])
                 } else {
                     append_global_error(format!("Custom color format `{name}` not found"));

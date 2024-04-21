@@ -53,13 +53,13 @@ impl CustomFormatsWindow {
                                 ui.label(k);
                                 if ui.button(icon::EDIT).clicked() {
                                     ui.memory_mut(|mem| mem.request_focus(text_edit_id));
-                                    self.edit_key = k.clone();
-                                    self.new_key = k.clone();
+                                    self.edit_key.clone_from(k);
+                                    self.new_key.clone_from(k);
                                 }
                             }
                             let edit_re = ui.text_edit_singleline(v);
                             if edit_re.gained_focus() {
-                                self.highlighted_key = k.clone();
+                                self.highlighted_key.clone_from(k);
                             } else if *k == self.highlighted_key && edit_re.lost_focus() {
                                 self.highlighted_key.clear();
                             }
