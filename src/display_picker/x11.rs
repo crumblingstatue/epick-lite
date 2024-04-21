@@ -187,9 +187,19 @@ impl X11Conn {
         let img = self.get_image(window, x, y, 1, 1)?;
         let pixel = img.get_pixel(0, 0);
 
-        let red = (pixel >> 8) & 0xff;
-        let green = (pixel >> 16) & 0xff;
-        let blue = (pixel >> 24) & 0xff;
+        let (red, green, blue);
+        match img.byte_order() {
+            x11rb::image::ImageOrder::LsbFirst => {
+                red = (pixel >> 16) & 0xff;
+                green = (pixel >> 8) & 0xff;
+                blue = pixel & 0xff;
+            }
+            x11rb::image::ImageOrder::MsbFirst => {
+                red = (pixel >> 8) & 0xff;
+                green = (pixel >> 16) & 0xff;
+                blue = (pixel >> 24) & 0xff;
+            }
+        }
 
         Ok((red as u8, green as u8, blue as u8))
     }
