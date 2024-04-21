@@ -2,20 +2,9 @@
     <img src="./assets/icon.png">
 </p>
 
-# epick
+# epick-lite
 
-[![Build Status](https://github.com/vv9k/epick/workflows/epick%20CI/badge.svg)](https://github.com/vv9k/epick/actions?query=workflow%3A%22epick+CI%22)
-
-Color picker for creating harmonic color palettes that works on Linux, Windows, macOS and web.
-
-## Get it
-
-You can checkout the web demo over [here](https://vv9k.github.io/epick/) or get a native binary from the [GitHub release page](https://github.com/vv9k/epick/releases).
-
-If you happen to use Arch Linux you can grab **epick** from [AUR](https://aur.archlinux.org/packages/epick/) using your favorite package manager:
-```bash
-$ paru -S epick
-```
+Fork of [epick](https://github.com/vv9k/epick) with a more "lite" ui and feature set.
 
 ## Build
 
@@ -36,10 +25,6 @@ $ make start_web
 This will build the WASM files and start a simple http server listening at `127.0.0.1:8080`.
 
 To build without `make` checkout the build instructions in the `Makefile`
-
-## Demo
-
-To checkout the latest build of master branch head over to the [web demo](https://vv9k.github.io/epick).
 
 ## Keyboard shortcuts
 
