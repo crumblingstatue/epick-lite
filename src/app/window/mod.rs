@@ -26,9 +26,19 @@ pub fn default_frame(is_dark_mode: bool) -> Frame {
         inner_margin: Margin::symmetric(15., 15.),
         rounding: Rounding::same(5.),
         shadow: if is_dark_mode {
-            Shadow::NONE
+            Shadow {
+                offset: egui::vec2(2.0, 2.0),
+                blur: 40.0,
+                spread: 3.0,
+                color: egui::Color32::BLACK,
+            }
         } else {
-            Shadow::NONE
+            Shadow {
+                offset: egui::vec2(2.0, 2.0),
+                blur: 40.0,
+                spread: 3.0,
+                color: egui::Color32::GRAY,
+            }
         },
         stroke: if is_dark_mode {
             Stroke::new(2., *D_BG_00)
