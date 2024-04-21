@@ -4,7 +4,6 @@ use std::ptr::null;
 
 use crate::{color::Color, display_picker::DisplayPicker};
 use anyhow::{Context, Error, Result};
-use egui::ecolor32;
 use windows::{
     core::PCWSTR,
     Win32::{
@@ -155,7 +154,7 @@ impl DisplayPicker for WinConn {
         let g = ((color >> 8) & 0xff) as u8;
         let b = ((color >> 16) & 0xff) as u8;
 
-        Ok(Color::from(Color32::from_rgb(r, g, b)))
+        Ok(Color::from(egui::Color32::from_rgb(r, g, b)))
     }
 }
 
