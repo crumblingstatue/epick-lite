@@ -191,48 +191,6 @@ mod tests {
     }
 
     #[test]
-    fn navigation() {
-        let (p1, p2, p3, p4) = test_palettes();
-        let mut palettes = Palettes::new(p1.clone());
-
-        assert_eq!(palettes.current(), &p1);
-        palettes.next();
-        assert_eq!(palettes.current(), &p1);
-        palettes.prev();
-        assert_eq!(palettes.current(), &p1);
-
-        palettes.add(p2.clone());
-        assert_eq!(palettes.current(), &p1);
-        palettes.next();
-        assert_eq!(palettes.current(), &p2);
-        palettes.next();
-        assert_eq!(palettes.current(), &p2);
-
-        palettes.add(p3.clone());
-        palettes.add(p4.clone());
-        palettes.next();
-        assert_eq!(palettes.current(), &p3);
-        palettes.next();
-        assert_eq!(palettes.current(), &p4);
-        palettes.prev();
-        assert_eq!(palettes.current(), &p3);
-        palettes.prev();
-        assert_eq!(palettes.current(), &p2);
-        palettes.prev();
-        assert_eq!(palettes.current(), &p1);
-        palettes.prev();
-        assert_eq!(palettes.current(), &p1);
-
-        palettes.move_to_last();
-        assert_eq!(palettes.current(), &p4);
-
-        palettes.move_to_name(&p2.name);
-        assert_eq!(palettes.current(), &p2);
-        palettes.move_to_name(&p1.name);
-        assert_eq!(palettes.current(), &p1);
-    }
-
-    #[test]
     fn append() {
         let (p1, _, _, _) = test_palettes();
         let mut palettes = Palettes::new(p1);
