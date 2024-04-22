@@ -16,7 +16,7 @@ use crate::{
     ui::{
         colorbox::{ColorBox, COLORBOX_PICK_TOOLTIP},
         colors::*,
-        dark_visuals, icon, light_visuals, DOUBLE_SPACE, HALF_SPACE, SPACE,
+        dark_visuals, icon, light_visuals, HALF_SPACE, SPACE,
     },
     zoom_picker::ZoomPicker,
 };
@@ -47,6 +47,9 @@ pub const CURRENT_COLOR_BOX_SIZE: f32 = 40.0;
 pub enum CentralPanelTab {
     Picker,
     Palettes,
+    Hues,
+    Shades,
+    Tints,
 }
 
 #[derive(Default)]
@@ -279,26 +282,29 @@ impl App {
                     ctx.app.sidepanel.show = false;
                 }
             );
-
-            ui.add_space(DOUBLE_SPACE);
-
             add_button_if!(
                 "hues",
-                self.windows.hues.is_open,
-                { self.windows.hues.is_open = false },
-                { self.windows.hues.is_open = true }
+                matches!(ctx.app.central_panel_tab, CentralPanelTab::Hues),
+                {
+                    ctx.app.central_panel_tab = CentralPanelTab::Hues;
+                    ctx.app.sidepanel.show = false;
+                }
             );
             add_button_if!(
                 "shades",
-                self.windows.shades.is_open,
-                { self.windows.shades.is_open = false },
-                { self.windows.shades.is_open = true }
+                matches!(ctx.app.central_panel_tab, CentralPanelTab::Shades),
+                {
+                    ctx.app.central_panel_tab = CentralPanelTab::Shades;
+                    ctx.app.sidepanel.show = false;
+                }
             );
             add_button_if!(
                 "tints",
-                self.windows.tints.is_open,
-                { self.windows.tints.is_open = false },
-                { self.windows.tints.is_open = true }
+                matches!(ctx.app.central_panel_tab, CentralPanelTab::Tints),
+                {
+                    ctx.app.central_panel_tab = CentralPanelTab::Tints;
+                    ctx.app.sidepanel.show = false;
+                }
             );
 
             ui.with_layout(Layout::right_to_left(eframe::emath::Align::Center), |ui| {
@@ -334,9 +340,6 @@ impl App {
             append_global_error(e);
         }
 
-        self.shades_window(ctx);
-        self.tints_window(ctx);
-        self.hues_window(ctx);
         self.windows.help.display(ctx.egui);
     }
 
@@ -361,6 +364,9 @@ impl App {
             .show(ctx.egui, |ui| match ctx.app.central_panel_tab {
                 CentralPanelTab::Picker => self.picker_ui(ctx, ui),
                 CentralPanelTab::Palettes => self.palettes_ui(ctx, ui),
+                CentralPanelTab::Hues => self.hues_window(ctx, ui),
+                CentralPanelTab::Shades => self.shades_window(ctx, ui),
+                CentralPanelTab::Tints => self.tints_window(ctx, ui),
             });
     }
 

@@ -1,8 +1,5 @@
 use crate::{
-    app::{
-        window::{self, WINDOW_X_OFFSET, WINDOW_Y_OFFSET},
-        App, ColorHarmony, FrameCtx,
-    },
+    app::{App, ColorHarmony, FrameCtx},
     color::{Color, Gradient},
     ui::{
         colorbox::{ColorBox, COLORBOX_PICK_TOOLTIP},
@@ -10,46 +7,29 @@ use crate::{
     },
 };
 
-use egui::{vec2, ComboBox, Grid, Ui, Vec2, Window};
+use egui::{vec2, ComboBox, Grid, Ui, Vec2};
 
 macro_rules! scheme_window_impl {
-    ($title:literal, $self:ident, $ctx:ident, $win:ident, $size_field:ident, $colors:expr) => {{
-        if $self.windows.$win.is_open {
-            let offset = $ctx.egui.style().spacing.slider_width * WINDOW_X_OFFSET;
-            let mut is_open = true;
-            let is_dark_mode = $ctx.egui.style().visuals.dark_mode;
-            Window::new($title)
-                .frame(window::default_frame(is_dark_mode))
-                .default_pos((offset, WINDOW_Y_OFFSET))
-                .collapsible(false)
-                .vscroll(true)
-                .open(&mut is_open)
-                .show($ctx.egui, |ui| {
-                    window::apply_default_style(ui, is_dark_mode);
-                    $self.windows.$win.sliders(ui);
+    ($title:literal, $self:ident, $ctx:ident, $ui:ident, $win:ident, $size_field:ident, $colors:expr) => {{
+        let ui = $ui;
+        $self.windows.$win.sliders(ui);
 
-                    let colors = $colors;
-                    let size = vec2(
-                        $self.windows.$win.$size_field,
-                        $self.windows.$win.$size_field,
-                    );
+        let colors = $colors;
+        let size = vec2(
+            $self.windows.$win.$size_field,
+            $self.windows.$win.$size_field,
+        );
 
-                    let base_cb = ColorBox::builder()
-                        .hover_help(COLORBOX_PICK_TOOLTIP)
-                        .label(true)
-                        .size(size);
-                    colors.iter().for_each(|color| {
-                        let cb = base_cb.clone().color(*color).build();
-                        ui.horizontal(|ui| {
-                            cb.display($ctx, ui);
-                        });
-                    });
-                });
-
-            if !is_open {
-                $self.windows.$win.is_open = false;
-            }
-        }
+        let base_cb = ColorBox::builder()
+            .hover_help(COLORBOX_PICK_TOOLTIP)
+            .label(true)
+            .size(size);
+        colors.iter().for_each(|color| {
+            let cb = base_cb.clone().color(*color).build();
+            ui.horizontal(|ui| {
+                cb.display($ctx, ui);
+            });
+        });
     }};
 }
 
@@ -77,11 +57,12 @@ fn cb(
 }
 
 impl App {
-    pub fn hues_window(&mut self, ctx: &mut FrameCtx<'_>) {
+    pub fn hues_window(&mut self, ctx: &mut FrameCtx<'_>, ui: &mut Ui) {
         scheme_window_impl!(
             "Hues",
             self,
             ctx,
+            ui,
             hues,
             hue_color_size,
             ctx.app
@@ -91,11 +72,12 @@ impl App {
         );
     }
 
-    pub fn tints_window(&mut self, ctx: &mut FrameCtx<'_>) {
+    pub fn tints_window(&mut self, ctx: &mut FrameCtx<'_>, ui: &mut Ui) {
         scheme_window_impl!(
             "Tints",
             self,
             ctx,
+            ui,
             tints,
             tint_color_size,
             ctx.app
@@ -105,11 +87,12 @@ impl App {
         );
     }
 
-    pub fn shades_window(&mut self, ctx: &mut FrameCtx<'_>) {
+    pub fn shades_window(&mut self, ctx: &mut FrameCtx<'_>, ui: &mut Ui) {
         scheme_window_impl!(
             "Shades",
             self,
             ctx,
+            ui,
             shades,
             shade_color_size,
             ctx.app
