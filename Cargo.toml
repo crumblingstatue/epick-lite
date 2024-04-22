@@ -20,7 +20,7 @@ dirs = "5"
 nom = "7"
 image = "0.25.1"
 once_cell = "1"
-arboard = "2"
+arboard = "3.3.2"
 
 #pretty_env_logger = "0.4"
 #tracing-subscriber = { version = "0.3", features = ["fmt", "std"] }
