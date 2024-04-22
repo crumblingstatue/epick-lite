@@ -69,35 +69,10 @@ impl ExportWindow {
                             });
 
                             ui.label("Export path:");
-                            if ui
-                                .add(
-                                    TextEdit::singleline(&mut self.path)
-                                        .interactive(self.export_path_editable),
-                                )
-                                .clicked()
-                                && !self.export_path_editable
-                            {
-                                let location = if let Ok(path) = std::env::current_dir() {
-                                    path.to_string_lossy().to_string()
-                                } else {
-                                    "".into()
-                                };
-
-                                match native_dialog::FileDialog::new()
-                                    .set_location(&location)
-                                    .add_filter("GIMP Palette", &["gpl"])
-                                    .add_filter("Text file", &["txt"])
-                                    .show_save_single_file()
-                                {
-                                    Ok(Some(path)) => {
-                                        self.path = path.to_string_lossy().to_string()
-                                    }
-                                    Err(_) => {
-                                        self.export_path_editable = true;
-                                    }
-                                    Ok(None) => {}
-                                }
-                            };
+                            ui.add(
+                                TextEdit::singleline(&mut self.path)
+                                    .interactive(self.export_path_editable),
+                            );
 
                             match &self.export_status {
                                 Ok(msg) => ui.colored_label(Color32::GREEN, msg),
