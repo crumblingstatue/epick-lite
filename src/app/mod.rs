@@ -24,8 +24,8 @@ use window::{ExportWindow, HelpWindow, HuesWindow, SettingsWindow, ShadesWindow,
 
 use eframe::{CreationContext, Storage};
 use egui::{
-    Button, CollapsingHeader, Color32, CursorIcon, Id, Label, Layout, Margin, Rgba, RichText,
-    ScrollArea, Ui, Vec2, Visuals,
+    Button, Color32, CursorIcon, Id, Label, Layout, Margin, Rgba, RichText, ScrollArea, Ui, Vec2,
+    Visuals,
 };
 use once_cell::sync::{Lazy, OnceCell};
 use serde::{Deserialize, Serialize};
@@ -206,40 +206,6 @@ impl App {
                 f(ctx)
             }
         }
-    }
-
-    fn hex_input(&self, ctx: &mut FrameCtx<'_>, ui: &mut Ui) {
-        CollapsingHeader::new("Text input").show(ui, |ui| {
-            ui.label("Enter a hex color: ");
-            ui.horizontal(|ui| {
-                let resp = ui.text_edit_singleline(&mut ctx.app.picker.hex_color);
-                if (resp.lost_focus() && ui.input(|inp| inp.key_pressed(egui::Key::Enter)))
-                    || ui
-                        .button(icon::PLAY)
-                        .on_hover_text("Use this color")
-                        .on_hover_cursor(CursorIcon::PointingHand)
-                        .clicked()
-                {
-                    if ctx.app.picker.hex_color.len() < 6 {
-                        append_global_error("Enter a color first (ex. ab12ff #1200ff)".to_owned());
-                    } else if let Some(color) =
-                        Color::from_hex(ctx.app.picker.hex_color.trim_start_matches('#'))
-                    {
-                        ctx.app.picker.set_cur_color(color);
-                    } else {
-                        append_global_error("The entered hex color is not valid".to_owned());
-                    }
-                }
-                if ui
-                    .button(icon::ADD)
-                    .on_hover_text(ADD_DESCR)
-                    .on_hover_cursor(CursorIcon::Copy)
-                    .clicked()
-                {
-                    ctx.app.add_cur_color()
-                }
-            });
-        });
     }
 
     fn gradient_box(
@@ -479,6 +445,52 @@ impl App {
                     {
                         ctx.app.add_cur_color();
                     }
+                    let re = ui.button(icon::EDIT).on_hover_text("Enter hex color");
+                    let color_edit_id = egui::Id::new("color-edit-popup");
+                    let mut just_clicked = false;
+                    if re.clicked() {
+                        ui.memory_mut(|mem| mem.open_popup(color_edit_id));
+                        just_clicked = true;
+                    }
+                    custom_popup_below_widget(ui, color_edit_id, &re, 100.0, |ui| {
+                        ui.horizontal(|ui| {
+                            let resp = ui.text_edit_singleline(&mut ctx.app.picker.hex_color);
+                            if just_clicked {
+                                resp.request_focus();
+                            }
+                            if (resp.lost_focus()
+                                && ui.input(|inp| inp.key_pressed(egui::Key::Enter)))
+                                || ui
+                                    .button(icon::PLAY)
+                                    .on_hover_text("Use this color")
+                                    .on_hover_cursor(CursorIcon::PointingHand)
+                                    .clicked()
+                            {
+                                if ctx.app.picker.hex_color.len() < 6 {
+                                    append_global_error(
+                                        "Enter a color first (ex. ab12ff #1200ff)".to_owned(),
+                                    );
+                                } else if let Some(color) = Color::from_hex(
+                                    ctx.app.picker.hex_color.trim_start_matches('#'),
+                                ) {
+                                    ctx.app.picker.set_cur_color(color);
+                                } else {
+                                    append_global_error(
+                                        "The entered hex color is not valid".to_owned(),
+                                    );
+                                }
+                                ui.memory_mut(|mem| mem.close_popup());
+                            }
+                            if ui
+                                .button(icon::ADD)
+                                .on_hover_text(ADD_DESCR)
+                                .on_hover_cursor(CursorIcon::Copy)
+                                .clicked()
+                            {
+                                ctx.app.add_cur_color()
+                            }
+                        })
+                    });
                 });
 
                 self.zoom_picker.display(ctx, ui);
@@ -494,8 +506,6 @@ impl App {
                 self.harmonies_ctl_ui(ctx, ui);
                 ui.separator();
                 self.sliders(ctx, ui);
-                ui.separator();
-                self.hex_input(ctx, ui);
                 let mut available_space = ui.available_size_before_wrap();
                 if ctx.app.sidepanel.show {
                     available_space.x -= ctx.app.sidepanel.response_size.x;
@@ -529,5 +539,40 @@ impl App {
             7 => ctx.app.picker.lch_ab_sliders(ui),
             _ => {}
         }
+    }
+}
+
+pub fn custom_popup_below_widget<R>(
+    ui: &Ui,
+    popup_id: Id,
+    widget_response: &egui::Response,
+    width: f32,
+    add_contents: impl FnOnce(&mut Ui) -> R,
+) -> Option<R> {
+    if ui.memory(|mem| mem.is_popup_open(popup_id)) {
+        let (pos, pivot) = (widget_response.rect.left_bottom(), egui::Align2::LEFT_TOP);
+        let re = egui::Area::new(popup_id)
+            .order(egui::Order::Foreground)
+            .constrain(true)
+            .fixed_pos(pos)
+            .pivot(pivot)
+            .show(ui.ctx(), |ui| {
+                let frame = egui::Frame::popup(ui.style());
+                frame
+                    .show(ui, |ui| {
+                        ui.with_layout(Layout::top_down_justified(egui::Align::LEFT), |ui| {
+                            ui.set_width(width);
+                            add_contents(ui)
+                        })
+                        .inner
+                    })
+                    .inner
+            });
+        if widget_response.clicked_elsewhere() && re.response.clicked_elsewhere() {
+            ui.memory_mut(|mem| mem.close_popup());
+        }
+        Some(re.inner)
+    } else {
+        None
     }
 }
