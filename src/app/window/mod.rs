@@ -70,7 +70,7 @@ impl Default for ShadesWindow {
         Self {
             is_open: false,
             num_of_shades: 6,
-            shade_color_size: 100.,
+            shade_color_size: DEFAULT_COLOR_SIZE,
         }
     }
 }
@@ -102,7 +102,7 @@ impl Default for TintsWindow {
         Self {
             is_open: false,
             num_of_tints: 6,
-            tint_color_size: 100.,
+            tint_color_size: DEFAULT_COLOR_SIZE,
         }
     }
 }
@@ -130,12 +130,14 @@ pub struct HuesWindow {
     pub hues_step: f32,
 }
 
+const DEFAULT_COLOR_SIZE: f32 = 48.0;
+
 impl Default for HuesWindow {
     fn default() -> Self {
         Self {
             is_open: false,
             num_of_hues: 4,
-            hue_color_size: 100.,
+            hue_color_size: DEFAULT_COLOR_SIZE,
             hues_step: 0.05,
         }
     }
