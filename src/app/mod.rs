@@ -409,9 +409,15 @@ impl App {
                         .build();
                     cb.display(ctx, ui);
                     ui.label("Current");
+                    let hover_ui = |ui: &mut egui::Ui| {
+                        ui.label(
+                            egui::RichText::new("Copy to clipboard").color(egui::Color32::GRAY),
+                        );
+                        ui.label(ctx.app.clipboard_color(&ctx.app.picker.current_color));
+                    };
                     if ui
                         .button(icon::COPY)
-                        .on_hover_text("Copy color to clipboard")
+                        .on_hover_ui(hover_ui)
                         .on_hover_cursor(CursorIcon::Alias)
                         .clicked()
                     {
