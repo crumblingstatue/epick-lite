@@ -411,7 +411,8 @@ impl App {
                     ui.label("Current");
                     let hover_ui = |ui: &mut egui::Ui| {
                         ui.label(
-                            egui::RichText::new("Copy to clipboard").color(egui::Color32::GRAY),
+                            egui::RichText::new("Copy to clipboard (ctrl+c)")
+                                .color(egui::Color32::GRAY),
                         );
                         ui.label(ctx.app.clipboard_color(&ctx.app.picker.current_color));
                     };
@@ -420,6 +421,9 @@ impl App {
                         .on_hover_ui(hover_ui)
                         .on_hover_cursor(CursorIcon::Alias)
                         .clicked()
+                        || ui.input(|inp| {
+                            inp.events.iter().any(|ev| matches!(ev, egui::Event::Copy))
+                        })
                     {
                         if let Err(e) = save_to_clipboard(
                             ctx.app.clipboard_color(&ctx.app.picker.current_color),
