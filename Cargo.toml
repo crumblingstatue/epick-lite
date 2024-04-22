@@ -41,4 +41,5 @@ core-graphics = {version = "0.22"}
 tempfile = "3"
 
 [profile.release]
-opt-level = 2
+panic = "abort"
+strip = true
