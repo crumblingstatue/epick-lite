@@ -34,13 +34,11 @@ impl Palettes {
     }
 
     pub fn current(&self) -> &NamedPalette {
-        // SAFETY: Palettes always keeps at least one palette thus it is always accessible
-        unsafe { self.palettes.get_unchecked(self.current_idx) }
+        self.palettes.get(self.current_idx).unwrap()
     }
 
     pub fn current_mut(&mut self) -> &mut NamedPalette {
-        // SAFETY: Palettes always keeps at least one palette thus it is always accessible
-        unsafe { self.palettes.get_unchecked_mut(self.current_idx) }
+        self.palettes.get_mut(self.current_idx).unwrap()
     }
 
     pub fn len(&self) -> usize {
