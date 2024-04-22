@@ -1,6 +1,6 @@
 use crate::{
     app::{
-        window::{self, WINDOW_X_OFFSET, WINDOW_Y_OFFSET},
+        window::{self},
         AppCtx,
     },
     color::{ChromaticAdaptationMethod, ColorHarmony, Illuminant, PaletteFormat, RgbWorkingSpace},
@@ -9,7 +9,7 @@ use crate::{
     ui::{DOUBLE_SPACE, HALF_SPACE, SPACE},
 };
 
-use egui::{Color32, ComboBox, Ui, Window};
+use egui::{Color32, ComboBox, Ui};
 use std::fmt::Display;
 
 use egui::CursorIcon;
@@ -49,50 +49,34 @@ impl SettingsWindow {
         self.message = None;
     }
 
-    pub fn display(&mut self, ctx: &mut FrameCtx<'_>) {
-        if self.show {
-            let offset = ctx.egui.style().spacing.slider_width * WINDOW_X_OFFSET;
-            let mut show = true;
-            let is_dark_mode = ctx.egui.style().visuals.dark_mode;
-            Window::new("settings")
-                .frame(window::default_frame(is_dark_mode))
-                .open(&mut show)
-                .default_pos((offset, WINDOW_Y_OFFSET))
-                .show(ctx.egui, |ui| {
-                    window::apply_default_style(ui, is_dark_mode);
-                    if let Some(err) = &self.error {
-                        ui.colored_label(Color32::RED, err);
-                    }
-                    if let Some(msg) = &self.message {
-                        ui.colored_label(Color32::GREEN, msg);
-                    }
-
-                    self.ui_scale_slider(ctx.app, ui);
-                    ui.add_space(HALF_SPACE);
-                    self.color_formats(ctx.app, ui);
-                    ui.add_space(HALF_SPACE);
-                    self.rgb_working_space(ctx.app, ui);
-                    ui.add_space(HALF_SPACE);
-                    self.illuminant(ctx.app, ui);
-                    ui.add_space(HALF_SPACE);
-                    self.chromatic_adaptation_method(ctx.app, ui);
-                    ui.add_space(HALF_SPACE);
-                    self.color_harmony(ctx.app, ui);
-                    ui.add_space(HALF_SPACE);
-                    ui.checkbox(&mut ctx.app.settings.cache_colors, "Cache colors");
-                    ui.add_space(DOUBLE_SPACE);
-                    self.color_spaces(ctx.app, ui);
-                    ui.add_space(SPACE);
-
-                    self.save_settings_btn(ctx.app, ui);
-                });
-
-            if !show {
-                self.show = false;
-                self.clear_error();
-                self.clear_message();
-            }
+    pub fn display(&mut self, ctx: &mut FrameCtx<'_>, ui: &mut Ui) {
+        let is_dark_mode = ctx.egui.style().visuals.dark_mode;
+        window::apply_default_style(ui, is_dark_mode);
+        if let Some(err) = &self.error {
+            ui.colored_label(Color32::RED, err);
         }
+        if let Some(msg) = &self.message {
+            ui.colored_label(Color32::GREEN, msg);
+        }
+
+        self.ui_scale_slider(ctx.app, ui);
+        ui.add_space(HALF_SPACE);
+        self.color_formats(ctx.app, ui);
+        ui.add_space(HALF_SPACE);
+        self.rgb_working_space(ctx.app, ui);
+        ui.add_space(HALF_SPACE);
+        self.illuminant(ctx.app, ui);
+        ui.add_space(HALF_SPACE);
+        self.chromatic_adaptation_method(ctx.app, ui);
+        ui.add_space(HALF_SPACE);
+        self.color_harmony(ctx.app, ui);
+        ui.add_space(HALF_SPACE);
+        ui.checkbox(&mut ctx.app.settings.cache_colors, "Cache colors");
+        ui.add_space(DOUBLE_SPACE);
+        self.color_spaces(ctx.app, ui);
+        ui.add_space(SPACE);
+
+        self.save_settings_btn(ctx.app, ui);
     }
 
     fn save_settings_btn(&mut self, app_ctx: &mut AppCtx, ui: &mut Ui) {

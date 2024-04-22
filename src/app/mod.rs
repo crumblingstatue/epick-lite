@@ -49,6 +49,7 @@ pub enum CentralPanelTab {
     Hues,
     Shades,
     Tints,
+    Settings,
 }
 
 #[derive(Default)]
@@ -98,8 +99,6 @@ impl eframe::App for App {
             self.top_panel(&mut ctx);
 
             self.central_panel(&mut ctx);
-
-            self.display_windows(&mut ctx);
 
             ctx.set_window_size(ctx.egui.used_size());
 
@@ -311,20 +310,24 @@ impl App {
                 {
                     self.windows.help.toggle_window();
                 }
+                let mut text = egui::RichText::new(icon::SETTINGS);
+                if matches!(ctx.app.central_panel_tab, CentralPanelTab::Settings) {
+                    text = text.color(egui::Color32::YELLOW);
+                }
                 if ui
-                    .button(icon::SETTINGS)
+                    .button(text)
                     .on_hover_text("Settings")
                     .on_hover_cursor(CursorIcon::PointingHand)
                     .clicked()
                 {
-                    self.windows.settings.show = true;
+                    ctx.app.central_panel_tab = CentralPanelTab::Settings;
                 }
             });
         });
     }
 
-    fn display_windows(&mut self, ctx: &mut FrameCtx<'_>) {
-        self.windows.settings.display(ctx);
+    fn display_settings_stuff(&mut self, ctx: &mut FrameCtx<'_>, ui: &mut Ui) {
+        self.windows.settings.display(ctx, ui);
         self.windows.settings.custom_formats_window.display(
             &mut ctx.app.settings,
             ctx.egui,
@@ -362,6 +365,7 @@ impl App {
                 CentralPanelTab::Hues => self.hues_window(ctx, ui),
                 CentralPanelTab::Shades => self.shades_window(ctx, ui),
                 CentralPanelTab::Tints => self.tints_window(ctx, ui),
+                CentralPanelTab::Settings => self.display_settings_stuff(ctx, ui),
             });
     }
 
