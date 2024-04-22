@@ -36,7 +36,7 @@ impl NamedPalette {
 }
 
 #[derive(Clone, Default, Debug, Deserialize, Serialize, PartialEq)]
-pub struct Palette(Vec<Color>);
+pub struct Palette(pub Vec<Color>);
 
 impl Palette {
     pub fn iter(&self) -> impl Iterator<Item = &Color> {
@@ -64,23 +64,12 @@ impl Palette {
         }
     }
 
-    pub fn remove(&mut self, color: &Color) -> Option<Color> {
-        self.0
-            .iter()
-            .position(|clr| clr.as_rgb_triplet_scaled() == color.as_rgb_triplet_scaled())
-            .map(|i| self.0.remove(i))
-    }
-
     pub fn remove_pos(&mut self, i: usize) -> Option<Color> {
         if i < self.0.len() {
             Some(self.0.remove(i))
         } else {
             None
         }
-    }
-
-    pub fn clear(&mut self) {
-        self.0.clear()
     }
 
     pub fn as_gimp_palette(&self, name: &str) -> String {

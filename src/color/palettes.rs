@@ -9,7 +9,7 @@ use std::{
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Palettes {
-    palettes: Vec<NamedPalette>,
+    pub palettes: Vec<NamedPalette>,
     current_idx: usize,
 }
 
@@ -50,16 +50,6 @@ impl Palettes {
         if self.current_idx > 0 {
             self.current_idx -= 1;
         }
-    }
-
-    pub fn move_to_idx(&mut self, idx: usize) {
-        if idx < self.len() {
-            self.current_idx = idx;
-        }
-    }
-
-    pub fn move_to_last(&mut self) {
-        self.current_idx = self.len() - 1;
     }
 
     pub fn move_to_name(&mut self, name: impl AsRef<str>) {
@@ -109,14 +99,6 @@ impl Palettes {
             .iter()
             .position(|p| p == palette)
             .and_then(|i| self.remove_pos(i))
-    }
-
-    pub fn remove_current(&mut self) {
-        self.remove_pos(self.current_idx);
-    }
-
-    pub fn swap(&mut self, a: usize, b: usize) {
-        self.palettes.swap(a, b)
     }
 
     /// Loads the saved colors from the specified file located at `path`. The file is expected to
@@ -186,21 +168,6 @@ mod tests {
             name: "p4".into(),
         };
         (p1, p2, p3, p4)
-    }
-
-    #[test]
-    fn append() {
-        let (p1, _, _, _) = test_palettes();
-        let mut palettes = Palettes::new(p1);
-        assert_eq!(palettes.len(), 1);
-        palettes.append_empty();
-        assert_eq!(palettes.len(), 2);
-        palettes.move_to_last();
-        let p = NamedPalette {
-            name: "palette0".into(),
-            palette: Palette::default(),
-        };
-        assert_eq!(palettes.current(), &p);
     }
 
     #[test]

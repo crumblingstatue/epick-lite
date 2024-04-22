@@ -8,8 +8,7 @@ use crate::color::{Color, ColorFormat, Illuminant, RgbWorkingSpace};
 use egui::{
     ecolor,
     style::{Selection, Widgets},
-    Color32, CursorIcon, Id, InnerResponse, LayerId, Order, Rect, Sense, Shape, Stroke, Ui, Vec2,
-    Visuals,
+    Color32, InnerResponse, Rect, Sense, Shape, Stroke, Ui, Vec2, Visuals,
 };
 
 pub const SPACE: f32 = 7.;
@@ -77,50 +76,6 @@ pub mod colors {
 }
 use colors::*;
 use egui::epaint::Shadow;
-
-#[derive(Default, Debug)]
-pub struct DragInfo {
-    pub is_drop_target: bool,
-    pub is_drag_source: bool,
-}
-
-pub fn drag_source(ui: &mut Ui, id: Id, body: impl FnOnce(&mut Ui)) {
-    let is_being_dragged = ui.ctx().is_being_dragged(id);
-
-    if !is_being_dragged {
-        let response = ui.scope(body).response;
-
-        // Check for drags:
-        let response = ui.interact(response.rect, id, Sense::drag());
-        if response.hovered() {
-            ui.output_mut(|out| out.cursor_icon = CursorIcon::Grab);
-        }
-    } else {
-        ui.output_mut(|out| out.cursor_icon = CursorIcon::Grabbing);
-
-        // Paint the body to a new layer:
-        let layer_id = LayerId::new(Order::Tooltip, id);
-        let response = ui.with_layer_id(layer_id, body).response;
-
-        // Now we move the visuals of the body to where the mouse is.
-        // Normally you need to decide a location for a widget first,
-        // because otherwise that widget cannot interact with the mouse.
-        // However, a dragged component cannot be interacted with anyway
-        // (anything with `Order::Tooltip` always gets an empty [`Response`])
-        // So this is fine!
-
-        if let Some(pointer_pos) = ui.ctx().pointer_interact_pos() {
-            let delta = pointer_pos - response.rect.center();
-            ui.ctx().transform_layer_shapes(
-                layer_id,
-                egui::emath::TSTransform {
-                    scaling: 1.0,
-                    translation: delta,
-                },
-            );
-        }
-    }
-}
 
 pub fn drop_target<R>(
     ui: &mut Ui,

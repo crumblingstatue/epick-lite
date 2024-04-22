@@ -5,11 +5,23 @@ use crate::{
     save_to_clipboard,
     ui::{
         colorbox::{ColorBox, COLORBOX_DRAG_TOOLTIP},
-        drag_source, drop_target, icon, DragInfo, SPACE,
+        drop_target, icon, SPACE,
     },
 };
 
 use egui::{CursorIcon, Id, Label, RichText, ScrollArea, Ui};
+
+enum UiAction {
+    DeleteColor { pal_idx: usize, col_idx: usize },
+    Swap { a: ColorIdx, b: ColorIdx },
+    RemPush { rem_idx: ColorIdx, push_idx: usize },
+}
+
+#[derive(Clone, Copy)]
+struct ColorIdx {
+    pal_idx: usize,
+    col_idx: usize,
+}
 
 impl App {
     pub fn palettes_ui(&mut self, ctx: &mut FrameCtx<'_>, ui: &mut Ui) {
@@ -35,26 +47,49 @@ impl App {
                 }
             });
             ui.add_space(SPACE);
-            let mut palette_src_row = None;
-            let mut palette_dst_row = None;
 
             let current = ctx.app.palettes.current_idx();
+            let mut ui_action = None;
             for (i, palette) in ctx.app.palettes.clone().iter().enumerate() {
                 let active = current == i;
-                let resp = self.display_palette(palette, active, ctx, ui);
-                if ctx.egui.dragged_id().is_some() {
-                    if resp.inner.is_drag_source {
-                        palette_src_row = Some(i);
-                    } else if resp.inner.is_drop_target {
-                        palette_dst_row = Some(i);
-                    }
-                }
+                self.display_palette(palette, i, active, ctx, ui, &mut ui_action);
             }
-            if let Some(src_row) = palette_src_row {
-                if let Some(dst_row) = palette_dst_row {
-                    if ui.input(|inp| inp.pointer.any_released()) {
-                        ctx.app.palettes.swap(src_row, dst_row);
-                        ctx.app.palettes.move_to_idx(dst_row);
+            if let Some(action) = ui_action {
+                match action {
+                    UiAction::DeleteColor { pal_idx, col_idx } => {
+                        ctx.app.palettes.palettes[pal_idx]
+                            .palette
+                            .remove_pos(col_idx);
+                    }
+                    UiAction::Swap { a, b } => {
+                        if a.pal_idx == b.pal_idx {
+                            ctx.app.palettes.palettes[a.pal_idx]
+                                .palette
+                                .0
+                                .swap(a.col_idx, b.col_idx);
+                        } else {
+                            let first = ctx.app.palettes.palettes[a.pal_idx]
+                                .palette
+                                .remove_pos(a.col_idx)
+                                .unwrap();
+                            let second = ctx.app.palettes.palettes[b.pal_idx]
+                                .palette
+                                .remove_pos(b.col_idx)
+                                .unwrap();
+                            ctx.app.palettes.palettes[a.pal_idx]
+                                .palette
+                                .insert(a.col_idx, second);
+                            ctx.app.palettes.palettes[b.pal_idx]
+                                .palette
+                                .insert(b.col_idx, first);
+                        }
+                    }
+                    UiAction::RemPush { rem_idx, push_idx } => {
+                        let color = ctx.app.palettes.palettes[rem_idx.pal_idx]
+                            .palette
+                            .remove_pos(rem_idx.col_idx)
+                            .unwrap();
+                        ctx.app.palettes.palettes[push_idx].palette.0.push(color);
                     }
                 }
             }
@@ -64,42 +99,43 @@ impl App {
     fn display_palette(
         &mut self,
         palette: &NamedPalette,
+        index: usize,
         active: bool,
         ctx: &mut FrameCtx<'_>,
         ui: &mut Ui,
-    ) -> egui::InnerResponse<DragInfo> {
-        let mut is_drag_source = false;
-        let mut is_drop_target = false;
-        let mut resp = drop_target(ui, true, |ui| {
-            let palette_id = egui::Id::new(&palette.name);
-            ui.horizontal(|ui| {
-                self.display_palette_buttons(palette, ctx, ui);
-                drag_source(ui, palette_id, |ui| {
-                    if ctx.egui.is_being_dragged(palette_id) {
-                        is_drag_source = true;
+        action: &mut Option<UiAction>,
+    ) {
+        ui.horizontal(|ui| {
+            self.display_palette_buttons(palette, ctx, ui);
+            let mut label = RichText::new(&palette.name);
+            if active {
+                label = label.strong().heading();
+            }
+            ui.vertical(|ui| {
+                let re = ui.add(Label::new(label));
+                if let Some(payload) = re.dnd_hover_payload::<ColorIdx>() {
+                    ui.painter().rect_stroke(
+                        re.rect,
+                        2.0,
+                        egui::Stroke::new(2.0, egui::Color32::WHITE),
+                    );
+                    if ui.input(|inp| inp.pointer.primary_released()) {
+                        *action = Some(UiAction::RemPush {
+                            rem_idx: *payload,
+                            push_idx: index,
+                        });
                     }
-                    let mut label = RichText::new(&palette.name);
-                    if active {
-                        label = label.strong().heading();
-                    }
-                    ui.vertical(|ui| {
-                        ui.add(Label::new(label));
-                        self.display_palette_colors(palette, ctx, ui);
-                        ui.add_space(SPACE);
-                    });
-                });
+                } else if egui::DragAndDrop::has_payload_of_type::<ColorIdx>(ctx.egui) {
+                    ui.painter().rect_stroke(
+                        re.rect,
+                        2.0,
+                        egui::Stroke::new(2.0, egui::Color32::GRAY),
+                    );
+                }
+                self.display_palette_colors(palette, index, ctx, ui, action);
+                ui.add_space(SPACE);
             });
-            DragInfo::default()
         });
-        let is_being_dragged = ctx.egui.dragged_id().is_some();
-        if is_being_dragged && resp.response.hovered() {
-            is_drop_target = true;
-        }
-        resp.inner = DragInfo {
-            is_drag_source,
-            is_drop_target,
-        };
-        resp
     }
 
     fn display_palette_buttons(
@@ -151,8 +187,10 @@ impl App {
     fn display_palette_colors(
         &mut self,
         palette: &NamedPalette,
+        index: usize,
         ctx: &mut FrameCtx<'_>,
         ui: &mut Ui,
+        action: &mut Option<UiAction>,
     ) -> egui::InnerResponse<()> {
         egui::Grid::new(&palette.name)
             .spacing((2.5, 0.))
@@ -162,19 +200,62 @@ impl App {
                 for (i, color) in palette.palette.iter().enumerate() {
                     let resp = drop_target(ui, true, |ui| {
                         let color_id = Id::new(&palette.name).with(i);
-                        drag_source(ui, color_id, |ui| {
-                            let cb = ColorBox::builder()
-                                .size((
-                                    ctx.app.palettes_tab_color_size,
-                                    ctx.app.palettes_tab_color_size,
-                                ))
-                                .color(*color)
-                                .label(ctx.app.palettes_tab_display_label)
-                                .hover_help(COLORBOX_DRAG_TOOLTIP)
-                                .build();
-                            ui.vertical(|ui| {
-                                cb.display(ctx, ui);
-                            });
+                        let cb = ColorBox::builder()
+                            .size((
+                                ctx.app.palettes_tab_color_size,
+                                ctx.app.palettes_tab_color_size,
+                            ))
+                            .color(*color)
+                            .label(ctx.app.palettes_tab_display_label)
+                            .hover_help(COLORBOX_DRAG_TOOLTIP)
+                            .build();
+                        ui.vertical(|ui| {
+                            if let Some(re) = cb.display(ctx, ui) {
+                                let re = re.interact(egui::Sense::drag());
+                                if re.drag_started_by(egui::PointerButton::Primary) {
+                                    egui::DragAndDrop::set_payload(
+                                        ctx.egui,
+                                        ColorIdx {
+                                            pal_idx: index,
+                                            col_idx: i,
+                                        },
+                                    );
+                                }
+                                if ui.ctx().dragged_id() == Some(re.id)
+                                    && egui::DragAndDrop::has_any_payload(ui.ctx())
+                                {
+                                    ui.painter().rect_stroke(
+                                        re.rect,
+                                        2.0,
+                                        egui::Stroke::new(3.0, egui::Color32::WHITE),
+                                    );
+                                }
+                                if let Some(idx) = re.dnd_hover_payload::<ColorIdx>() {
+                                    ui.painter().rect_stroke(
+                                        re.rect,
+                                        2.0,
+                                        egui::Stroke::new(3.0, egui::Color32::WHITE),
+                                    );
+                                    if ui.input(|inp| inp.pointer.primary_released()) {
+                                        *action = Some(UiAction::Swap {
+                                            a: *idx,
+                                            b: ColorIdx {
+                                                pal_idx: index,
+                                                col_idx: i,
+                                            },
+                                        });
+                                    }
+                                }
+                                re.context_menu(|ui| {
+                                    if ui.button("Delete").clicked() {
+                                        *action = Some(UiAction::DeleteColor {
+                                            pal_idx: index,
+                                            col_idx: i,
+                                        });
+                                        ui.close_menu();
+                                    }
+                                });
+                            }
                         });
                         if ctx.egui.is_being_dragged(color_id) {
                             color_src_row = Some(i);

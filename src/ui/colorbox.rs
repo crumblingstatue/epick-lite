@@ -42,7 +42,7 @@ impl ColorBox {
         self.hover_help.as_deref()
     }
 
-    pub fn display(&self, ctx: &mut FrameCtx<'_>, ui: &mut Ui) {
+    pub fn display(&self, ctx: &mut FrameCtx<'_>, ui: &mut Ui) -> Option<egui::Response> {
         let color = self.color();
         let display_str = ctx.app.display_color(&color);
         let format = ctx.app.display_format();
@@ -65,7 +65,7 @@ impl ColorBox {
         );
         if let Some(resp) = resp {
             if self.label() {
-                ui.add(egui::Label::new(egui::RichText::new(&display_str).monospace()).wrap(false));
+                ui.add(egui::Label::new(egui::RichText::new(display_str).monospace()).wrap(false));
             }
 
             if resp.clicked() {
@@ -79,7 +79,9 @@ impl ColorBox {
             if resp.secondary_clicked() {
                 let _ = save_to_clipboard(ctx.app.clipboard_color(&color));
             }
+            return Some(resp);
         }
+        None
     }
 }
 
