@@ -1,7 +1,6 @@
 #![allow(dead_code)]
 mod palette;
 mod scheme;
-mod sidepanel;
 pub mod window;
 
 use crate::{
@@ -279,7 +278,6 @@ impl App {
                 matches!(ctx.app.central_panel_tab, CentralPanelTab::Palettes),
                 {
                     ctx.app.central_panel_tab = CentralPanelTab::Palettes;
-                    ctx.app.sidepanel.show = false;
                 }
             );
             add_button_if!(
@@ -287,7 +285,6 @@ impl App {
                 matches!(ctx.app.central_panel_tab, CentralPanelTab::Hues),
                 {
                     ctx.app.central_panel_tab = CentralPanelTab::Hues;
-                    ctx.app.sidepanel.show = false;
                 }
             );
             add_button_if!(
@@ -295,7 +292,6 @@ impl App {
                 matches!(ctx.app.central_panel_tab, CentralPanelTab::Shades),
                 {
                     ctx.app.central_panel_tab = CentralPanelTab::Shades;
-                    ctx.app.sidepanel.show = false;
                 }
             );
             add_button_if!(
@@ -303,7 +299,6 @@ impl App {
                 matches!(ctx.app.central_panel_tab, CentralPanelTab::Tints),
                 {
                     ctx.app.central_panel_tab = CentralPanelTab::Tints;
-                    ctx.app.sidepanel.show = false;
                 }
             );
 
