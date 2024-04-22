@@ -11,25 +11,28 @@ use egui::{vec2, ComboBox, Grid, Ui, Vec2};
 
 macro_rules! scheme_window_impl {
     ($title:literal, $self:ident, $ctx:ident, $ui:ident, $win:ident, $size_field:ident, $colors:expr) => {{
-        let ui = $ui;
-        $self.windows.$win.sliders(ui);
+        egui::ScrollArea::vertical()
+            .auto_shrink([false, true])
+            .show($ui, |ui| {
+                $self.windows.$win.sliders(ui);
 
-        let colors = $colors;
-        let size = vec2(
-            $self.windows.$win.$size_field,
-            $self.windows.$win.$size_field,
-        );
+                let colors = $colors;
+                let size = vec2(
+                    $self.windows.$win.$size_field,
+                    $self.windows.$win.$size_field,
+                );
 
-        let base_cb = ColorBox::builder()
-            .hover_help(COLORBOX_PICK_TOOLTIP)
-            .label(true)
-            .size(size);
-        colors.iter().for_each(|color| {
-            let cb = base_cb.clone().color(*color).build();
-            ui.horizontal(|ui| {
-                cb.display($ctx, ui);
+                let base_cb = ColorBox::builder()
+                    .hover_help(COLORBOX_PICK_TOOLTIP)
+                    .label(true)
+                    .size(size);
+                colors.iter().for_each(|color| {
+                    let cb = base_cb.clone().color(*color).build();
+                    ui.horizontal(|ui| {
+                        cb.display($ctx, ui);
+                    });
+                });
             });
-        });
     }};
 }
 
