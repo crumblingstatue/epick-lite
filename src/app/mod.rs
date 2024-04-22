@@ -97,10 +97,6 @@ impl eframe::App for App {
 
             self.central_panel(&mut ctx);
 
-            if ctx.app.sidepanel.show {
-                self.side_panel(&mut ctx);
-            }
-
             self.display_windows(&mut ctx);
 
             ctx.set_window_size(ctx.egui.used_size());
@@ -313,14 +309,6 @@ impl App {
                     .clicked()
                 {
                     self.windows.help.toggle_window();
-                }
-                if ui
-                    .button(icon::EXPAND)
-                    .on_hover_text("Show/hide side panel")
-                    .on_hover_cursor(CursorIcon::ResizeHorizontal)
-                    .clicked()
-                {
-                    ctx.app.sidepanel.show = !ctx.app.sidepanel.show;
                 }
                 if ui
                     .button(icon::SETTINGS)
