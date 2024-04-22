@@ -32,6 +32,7 @@ pub struct SettingsWindow {
 enum Tab {
     #[default]
     General,
+    Color,
     ColorFormats,
     PaletteFormats,
 }
@@ -60,6 +61,7 @@ impl SettingsWindow {
         ui.horizontal(|ui| {
             let table = [
                 (Tab::General, "General"),
+                (Tab::Color, "Color"),
                 (Tab::ColorFormats, "Color formats"),
                 (Tab::PaletteFormats, "Palette formats"),
             ];
@@ -72,6 +74,7 @@ impl SettingsWindow {
         ui.separator();
         match self.tab {
             Tab::General => self.general_settings_ui(ui, ctx),
+            Tab::Color => self.color_settings_ui(ui, ctx),
             Tab::ColorFormats => self.custom_formats_window.display(
                 &mut ctx.app.settings,
                 ui,
@@ -94,7 +97,9 @@ impl SettingsWindow {
         self.ui_scale_slider(ctx.app, ui);
         ui.add_space(HALF_SPACE);
         self.color_formats(ctx.app, ui);
-        ui.add_space(HALF_SPACE);
+    }
+
+    fn color_settings_ui(&mut self, ui: &mut Ui, ctx: &mut FrameCtx<'_>) {
         self.rgb_working_space(ctx.app, ui);
         ui.add_space(HALF_SPACE);
         self.illuminant(ctx.app, ui);
@@ -106,7 +111,6 @@ impl SettingsWindow {
         ui.checkbox(&mut ctx.app.settings.cache_colors, "Cache colors");
         ui.add_space(DOUBLE_SPACE);
         self.color_spaces(ctx.app, ui);
-        ui.add_space(SPACE);
     }
 
     fn save_settings_btn(&mut self, app_ctx: &mut AppCtx, ui: &mut Ui) {
