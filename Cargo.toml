@@ -10,7 +10,7 @@ name = "epick"
 path = "src/main.rs"
 
 [dependencies]
-eframe = { version = "0.27.2", features = ["persistence"] }
+eframe = { version = "0.27.2", default-features=false, features = ["glow", "x11", "wayland", "persistence"] }
 egui = { version = "0.27.2" }
 anyhow = "1"
 serde = { version = "1", features = ["derive"] }
