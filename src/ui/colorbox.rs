@@ -65,7 +65,7 @@ impl ColorBox {
         );
         if let Some(resp) = resp {
             if self.label() {
-                ui.monospace(&display_str);
+                ui.add(egui::Label::new(egui::RichText::new(&display_str).monospace()).wrap(false));
             }
 
             if resp.clicked() {
