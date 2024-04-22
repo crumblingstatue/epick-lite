@@ -205,15 +205,6 @@ impl AppCtx {
         self.add_color(self.picker.current_color)
     }
 
-    /// Replaces cursor icon with `icon`
-    pub fn toggle_mouse(&mut self, icon: CursorIcon) {
-        self.cursor_icon = if icon == self.cursor_icon {
-            CursorIcon::default()
-        } else {
-            icon
-        }
-    }
-
     pub fn check_settings_change(&mut self) {
         if self.settings.chromatic_adaptation_method
             != self.picker.sliders.chromatic_adaptation_method

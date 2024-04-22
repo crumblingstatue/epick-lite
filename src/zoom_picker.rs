@@ -23,20 +23,12 @@ use crate::display_picker::windows::{HWND, SW_SHOWDEFAULT, WS_BORDER, WS_POPUP};
 const ZOOM_IMAGE_WIDTH: u16 = ZOOM_WIN_WIDTH / ZOOM_SCALE as u16;
 #[cfg(target_os = "linux")]
 const ZOOM_IMAGE_HEIGHT: u16 = ZOOM_WIN_HEIGHT / ZOOM_SCALE as u16;
-#[cfg(target_os = "linux")]
-const ZOOM_WIN_BORDER_WIDTH: u32 = 2;
-#[cfg(any(target_os = "linux", windows))]
-static CURSOR_PICKER_WINDOW_NAME: &str = "epick - cursor picker";
 #[cfg(any(target_os = "linux", windows))]
 const ZOOM_SCALE: f32 = 10.;
 #[cfg(any(target_os = "linux", windows))]
 const ZOOM_WIN_WIDTH: u16 = 160;
 #[cfg(any(target_os = "linux", windows))]
 const ZOOM_WIN_HEIGHT: u16 = 160;
-#[cfg(any(target_os = "linux", windows))]
-const ZOOM_WIN_OFFSET: i32 = 50;
-#[cfg(any(target_os = "linux", windows))]
-const ZOOM_WIN_POINTER_DIAMETER: u16 = 10;
 #[cfg(windows)]
 const ZOOM_WIN_POINTER_RADIUS: u16 = ZOOM_WIN_POINTER_DIAMETER / 2;
 #[cfg(any(target_os = "linux", windows))]
@@ -46,8 +38,6 @@ const ZOOM_IMAGE_Y_OFFSET: i32 = ((ZOOM_WIN_HEIGHT / 2) as f32 / ZOOM_SCALE) as 
 
 pub struct ZoomPicker {
     pub display_picker: Option<Rc<dyn DisplayPickerExt>>,
-    #[cfg(target_os = "linux")]
-    picker_window: Option<(xproto::Window, xproto::Gcontext)>,
     #[cfg(windows)]
     picker_window: Option<HWND>,
 }
@@ -56,8 +46,6 @@ impl Default for ZoomPicker {
     fn default() -> Self {
         Self {
             display_picker: crate::display_picker::init_display_picker(),
-            #[cfg(target_os = "linux")]
-            picker_window: None,
             #[cfg(windows)]
             picker_window: None,
         }
@@ -84,104 +72,46 @@ impl ZoomPicker {
         };
     }
 
-    #[cfg(any(target_os = "linux", windows))]
-    fn display_zoom_window(&mut self, ctx: &mut FrameCtx<'_>, picker: &Rc<dyn DisplayPickerExt>) {
-        if self.picker_window.is_none() {
-            ctx.app.toggle_mouse(CursorIcon::Crosshair);
-            let cursor_pos = picker.get_cursor_pos().unwrap_or_default();
-
-            #[cfg(target_os = "linux")]
-            if let Ok(window) = picker.spawn_window(
-                CURSOR_PICKER_WINDOW_NAME,
-                (cursor_pos.0 - ZOOM_IMAGE_X_OFFSET) as i16,
-                (cursor_pos.1 - ZOOM_IMAGE_Y_OFFSET) as i16,
-                ZOOM_WIN_WIDTH + (ZOOM_WIN_BORDER_WIDTH * 2) as u16,
-                ZOOM_WIN_HEIGHT + (ZOOM_WIN_BORDER_WIDTH * 2) as u16,
-                picker.screen_num(),
-                display_picker::x11::WindowType::Notification,
-            ) {
-                self.picker_window = Some(window);
-            }
-
-            #[cfg(windows)]
-            if let Ok(window) = picker.spawn_window(
-                "EPICK_DIALOG",
-                CURSOR_PICKER_WINDOW_NAME,
-                cursor_pos.0 - ZOOM_IMAGE_X_OFFSET,
-                cursor_pos.1 - ZOOM_IMAGE_Y_OFFSET,
-                ZOOM_WIN_WIDTH as i32,
-                ZOOM_WIN_HEIGHT as i32,
-                WS_POPUP | WS_BORDER,
-            ) {
-                self.picker_window = Some(window);
-                if let Err(e) = picker.show_window(window, SW_SHOWDEFAULT) {
-                    append_global_error(e);
-                }
-            }
-        }
-    }
-
-    #[cfg(any(target_os = "linux", windows))]
-    fn hide_zoom_window(&mut self, picker: &Rc<dyn DisplayPickerExt>) {
-        if let Some(picker_window) = self.picker_window {
-            #[cfg(target_os = "linux")]
-            let _ = picker.destroy_window(picker_window.0);
-
-            #[cfg(windows)]
-            if let Err(e) = picker.destroy_window(picker_window) {
-                append_global_error(e);
-            }
-
-            self.picker_window = None;
-        }
-    }
-
     #[cfg(target_os = "linux")]
-    fn handle_zoom_picker(&mut self, _ui: &mut Ui, picker: Rc<dyn DisplayPickerExt>) {
-        if let Some((window, gc)) = self.picker_window {
-            let cursor_pos = picker.get_cursor_pos().unwrap_or_default();
-            if let Ok(img) = picker.get_image(
-                picker.screen().root,
-                (cursor_pos.0 - ZOOM_IMAGE_X_OFFSET) as i16,
-                (cursor_pos.1 - ZOOM_IMAGE_Y_OFFSET) as i16,
-                ZOOM_IMAGE_WIDTH,
-                ZOOM_IMAGE_HEIGHT,
-            ) {
-                use image::Pixel;
-                let white = image::Rgba::from_slice(&[255, 255, 255, 255]);
-                let black = image::Rgba::from_slice(&[0, 0, 0, 255]);
-                let img = display_picker::x11::resize_image(&img, ZOOM_SCALE);
-                let img = display_picker::x11::add_border(&img, white, ZOOM_WIN_BORDER_WIDTH / 2)
-                    .unwrap();
-                let img = display_picker::x11::add_border(&img, black, ZOOM_WIN_BORDER_WIDTH / 2)
-                    .unwrap();
+    fn handle_zoom_picker(&mut self, ui: &mut Ui, picker: Rc<dyn DisplayPickerExt>) {
+        use egui::{Color32, ColorImage, ImageSource, TextureOptions};
 
-                if let Err(e) = img.put(picker.conn(), window, gc, 0, 0) {
-                    append_global_error(e);
-                    return;
-                };
-
-                if let Err(e) = picker.draw_circle(
-                    window,
-                    gc,
-                    (ZOOM_WIN_WIDTH / 2) as i16,
-                    (ZOOM_WIN_HEIGHT / 2) as i16,
-                    ZOOM_WIN_POINTER_DIAMETER,
-                ) {
-                    append_global_error(e);
-                };
-            }
-            if let Err(e) = picker.update_window_pos(
-                window,
-                cursor_pos.0 + ZOOM_WIN_OFFSET,
-                cursor_pos.1 + ZOOM_WIN_OFFSET,
-            ) {
-                append_global_error(e);
-                return;
-            }
-            if let Err(e) = picker.flush() {
-                append_global_error(e);
-            }
+        let cursor_pos = picker.get_cursor_pos().unwrap_or_default();
+        if let Ok(img) = picker.get_image(
+            picker.screen().root,
+            (cursor_pos.0 - ZOOM_IMAGE_X_OFFSET) as i16,
+            (cursor_pos.1 - ZOOM_IMAGE_Y_OFFSET) as i16,
+            ZOOM_IMAGE_WIDTH,
+            ZOOM_IMAGE_HEIGHT,
+        ) {
+            let image = egui::ColorImage {
+                size: [img.width() as usize, img.height() as usize],
+                pixels: img
+                    .data()
+                    .chunks(4)
+                    .map(|pixfmt| {
+                        let [b, g, r, a] = pixfmt.try_into().unwrap();
+                        Color32::from_rgba_unmultiplied(r, g, b, a)
+                    })
+                    .collect(),
+            };
+            let tex_handle = ui
+                .ctx()
+                .load_texture("screen-image", image, TextureOptions::NEAREST);
+            let re = ui.image(egui::load::SizedTexture::new(
+                tex_handle.id(),
+                egui::vec2((img.width() * 10) as f32, (img.height() * 10) as f32),
+            ));
+            let painter = ui.painter_at(re.rect);
+            painter.circle(
+                re.rect.center() + egui::vec2(5.0, 5.0),
+                5.0,
+                egui::Color32::TRANSPARENT,
+                egui::Stroke::new(1.0, egui::Color32::WHITE),
+            );
+        }
+        if let Err(e) = picker.flush() {
+            append_global_error(e);
         }
     }
 
@@ -235,15 +165,15 @@ impl ZoomPicker {
         ui: &mut Ui,
         picker: Rc<dyn DisplayPickerExt>,
     ) {
-        ui.checkbox(&mut ctx.app.show_zoom_window, "Zoom window");
+        let re = ui.checkbox(&mut ctx.app.show_zoom_window, "Zoom window");
 
         if ctx.app.show_zoom_window {
-            self.display_zoom_window(ctx, &picker);
-        } else {
-            self.hide_zoom_window(&picker);
+            let rect = re.rect;
+            let pos = egui::pos2(rect.min.x, rect.max.y);
+            egui::show_tooltip_at(ctx.egui, egui::Id::new("zoomed-tooltip"), Some(pos), |ui| {
+                self.handle_zoom_picker(ui, picker);
+            });
         }
-
-        self.handle_zoom_picker(ui, picker);
     }
 
     #[cfg(not(any(target_os = "linux", windows)))]
