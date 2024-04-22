@@ -1,4 +1,4 @@
-use egui::{Button, Key, TextBuffer, TextEdit, Window};
+use egui::{Button, Key, TextBuffer, TextEdit};
 
 use crate::{
     app::settings::{ColorDisplayFmtEnum, Settings},
@@ -19,16 +19,13 @@ impl CustomFormatsWindow {
     pub(crate) fn display(
         &mut self,
         settings: &mut Settings,
-        ctx: &egui::Context,
+        ui: &mut egui::Ui,
         preview_color: Color,
     ) {
-        Window::new("Custom color formats")
-            .open(&mut self.show)
-            .show(ctx, |ui| {
-                let mut replace = false;
-                let keys: Vec<String> = settings.saved_color_formats.keys().cloned().collect();
-                let enter_pressed = ui.input(|inp| inp.key_pressed(Key::Enter));
-                egui::Grid::new("custom_formats_grid")
+        let mut replace = false;
+        let keys: Vec<String> = settings.saved_color_formats.keys().cloned().collect();
+        let enter_pressed = ui.input(|inp| inp.key_pressed(Key::Enter));
+        egui::Grid::new("custom_formats_grid")
                     .num_columns(4)
                     .show(ui, |ui| {
                         settings.saved_color_formats.retain(|k, v| {
@@ -109,23 +106,22 @@ impl CustomFormatsWindow {
                             }
                         }
                     });
-                if replace {
-                    let value = settings.saved_color_formats.remove(&self.edit_key).unwrap();
-                    settings
-                        .saved_color_formats
-                        .insert(self.new_key.take(), value);
-                    self.edit_key.clear();
-                }
-                if !self.highlighted_key.is_empty() {
-                    ui.heading("Preview");
-                    let preview_string = preview_color.display(
-                        ColorFormat::Custom(&settings.saved_color_formats[&self.highlighted_key]),
-                        settings.rgb_working_space,
-                        settings.illuminant,
-                    );
-                    ui.label(preview_string);
-                }
-            });
+        if replace {
+            let value = settings.saved_color_formats.remove(&self.edit_key).unwrap();
+            settings
+                .saved_color_formats
+                .insert(self.new_key.take(), value);
+            self.edit_key.clear();
+        }
+        if !self.highlighted_key.is_empty() {
+            ui.heading("Preview");
+            let preview_string = preview_color.display(
+                ColorFormat::Custom(&settings.saved_color_formats[&self.highlighted_key]),
+                settings.rgb_working_space,
+                settings.illuminant,
+            );
+            ui.label(preview_string);
+        }
     }
 }
 

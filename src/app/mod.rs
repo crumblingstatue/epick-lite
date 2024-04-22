@@ -328,12 +328,6 @@ impl App {
 
     fn display_settings_stuff(&mut self, ctx: &mut FrameCtx<'_>, ui: &mut Ui) {
         self.windows.settings.display(ctx, ui);
-        self.windows.settings.custom_formats_window.display(
-            &mut ctx.app.settings,
-            ctx.egui,
-            ctx.app.picker.current_color,
-        );
-        self.windows.settings.palette_formats_window.display(ctx);
         if let Err(e) = self.windows.export.display(ctx) {
             append_global_error(e);
         }

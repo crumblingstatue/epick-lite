@@ -1,8 +1,5 @@
 use crate::{
-    app::{
-        window::{self},
-        AppCtx,
-    },
+    app::AppCtx,
     color::{ChromaticAdaptationMethod, ColorHarmony, Illuminant, PaletteFormat, RgbWorkingSpace},
     context::FrameCtx,
     settings::{ColorDisplayFmtEnum, Settings},
@@ -28,6 +25,15 @@ pub struct SettingsWindow {
     selected_clipboard_fmt: String,
     pub custom_formats_window: CustomFormatsWindow,
     pub palette_formats_window: PaletteFormatsWindow,
+    tab: Tab,
+}
+
+#[derive(Default, Debug, PartialEq)]
+enum Tab {
+    #[default]
+    General,
+    ColorFormats,
+    PaletteFormats,
 }
 
 impl SettingsWindow {
@@ -50,8 +56,34 @@ impl SettingsWindow {
     }
 
     pub fn display(&mut self, ctx: &mut FrameCtx<'_>, ui: &mut Ui) {
-        let is_dark_mode = ctx.egui.style().visuals.dark_mode;
-        window::apply_default_style(ui, is_dark_mode);
+        ui.heading("Settings");
+        ui.horizontal(|ui| {
+            let table = [
+                (Tab::General, "General"),
+                (Tab::ColorFormats, "Color formats"),
+                (Tab::PaletteFormats, "Palette formats"),
+            ];
+            for (tab, label) in table {
+                if ui.selectable_label(self.tab == tab, label).clicked() {
+                    self.tab = tab;
+                }
+            }
+        });
+        ui.separator();
+        match self.tab {
+            Tab::General => self.general_settings_ui(ui, ctx),
+            Tab::ColorFormats => self.custom_formats_window.display(
+                &mut ctx.app.settings,
+                ui,
+                ctx.app.picker.current_color,
+            ),
+            Tab::PaletteFormats => self.palette_formats_window.display(ctx, ui),
+        };
+        ui.separator();
+        self.save_settings_btn(ctx.app, ui);
+    }
+
+    fn general_settings_ui(&mut self, ui: &mut Ui, ctx: &mut FrameCtx<'_>) {
         if let Some(err) = &self.error {
             ui.colored_label(Color32::RED, err);
         }
@@ -75,8 +107,6 @@ impl SettingsWindow {
         ui.add_space(DOUBLE_SPACE);
         self.color_spaces(ctx.app, ui);
         ui.add_space(SPACE);
-
-        self.save_settings_btn(ctx.app, ui);
     }
 
     fn save_settings_btn(&mut self, app_ctx: &mut AppCtx, ui: &mut Ui) {
@@ -354,15 +384,6 @@ impl SettingsWindow {
             &mut app_ctx.settings.auto_copy_picked_color,
             "Auto copy picked color",
         );
-        ui.add_space(HALF_SPACE);
-        ui.horizontal(|ui| {
-            if ui.button("Color formats …").clicked() {
-                self.custom_formats_window.show = true;
-            }
-            if ui.button("Palette formats …").clicked() {
-                self.palette_formats_window.show = true;
-            }
-        });
     }
 
     fn ui_scale_slider(&mut self, app_ctx: &mut AppCtx, ui: &mut Ui) {
