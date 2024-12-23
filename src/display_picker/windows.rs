@@ -5,13 +5,12 @@ use std::ptr::null;
 use crate::{color::Color, display_picker::DisplayPicker};
 use anyhow::{Context, Error, Result};
 use windows::{
-    core::PCWSTR,
     Win32::{
         Foundation::{HINSTANCE, LPARAM, LRESULT, POINT, WPARAM},
         Graphics::Gdi::{
-            BitBlt, CreateCompatibleBitmap, CreateCompatibleDC, DeleteDC, GetDC, GetPixel,
-            Rectangle, ReleaseDC, SelectObject, SetStretchBltMode, StretchBlt, UpdateWindow,
-            CLR_INVALID, COLORONCOLOR, HBITMAP, HDC, SRCCOPY,
+            BitBlt, CLR_INVALID, COLORONCOLOR, CreateCompatibleBitmap, CreateCompatibleDC,
+            DeleteDC, GetDC, GetPixel, HBITMAP, HDC, Rectangle, ReleaseDC, SRCCOPY, SelectObject,
+            SetStretchBltMode, StretchBlt, UpdateWindow,
         },
         System::LibraryLoader::GetModuleHandleW,
         UI::WindowsAndMessaging::{
@@ -19,6 +18,7 @@ use windows::{
             MoveWindow, RegisterClassExW, ShowWindow, WNDCLASSEXW,
         },
     },
+    core::PCWSTR,
 };
 
 pub use windows::Win32::{

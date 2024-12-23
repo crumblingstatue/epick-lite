@@ -3,7 +3,7 @@ name = "epick-lite"
 version = "0.9.0"
 description = "Fork of epick with a more \"lite\" ui and feature set"
 authors = ["Wojciech Kępka <wojciech@wkepka.dev>", "github.com/crumblingstatue"]
-edition = "2021"
+edition = "2024"
 
 [[bin]]
 name = "epick"

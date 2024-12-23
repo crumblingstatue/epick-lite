@@ -1,7 +1,7 @@
 use crate::{
     color::{
-        chromatic_adaptation::ChromaticAdaptationMethod, illuminant::Illuminant, rgb::Rgb,
-        working_space::RgbWorkingSpace, xyy::xyY, CIEColor, LchUV, Luv, CIE_E, CIE_K,
+        CIE_E, CIE_K, CIEColor, LchUV, Luv, chromatic_adaptation::ChromaticAdaptationMethod,
+        illuminant::Illuminant, rgb::Rgb, working_space::RgbWorkingSpace, xyy::xyY,
     },
     math::{Matrix1x3, Matrix3},
 };

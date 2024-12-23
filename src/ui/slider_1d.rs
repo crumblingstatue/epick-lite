@@ -1,6 +1,6 @@
 use crate::color::Color;
-use eframe::egui::{epaint::Mesh, lerp, remap_clamp, Shape, Stroke};
-use egui::{pos2, vec2, Color32, CursorIcon, Response, Sense, Ui};
+use eframe::egui::{Shape, Stroke, epaint::Mesh, lerp, remap_clamp};
+use egui::{Color32, CursorIcon, Response, Sense, Ui, pos2, vec2};
 use std::ops::{Neg, RangeInclusive};
 
 /// Number of vertices per dimension in the color sliders.

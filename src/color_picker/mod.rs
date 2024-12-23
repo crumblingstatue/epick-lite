@@ -3,14 +3,14 @@ mod sliders;
 use crate::{
     color::{
         CIEColor, Cmyk, Color, Hsl, Hsv, Illuminant, Lab, LchAB, LchUV, Luv, Rgb, RgbWorkingSpace,
-        Xyz, U8_MAX, U8_MIN,
+        U8_MAX, U8_MIN, Xyz,
     },
     math,
     ui::{slider_1d, slider_2d},
 };
 use sliders::ColorSliders;
 
-use egui::{ecolor::Hsva, DragValue, Grid, Ui};
+use egui::{DragValue, Grid, Ui, ecolor::Hsva};
 use serde::{Deserialize, Serialize};
 use std::mem;
 

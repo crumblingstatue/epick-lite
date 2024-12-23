@@ -2,8 +2,8 @@ use crate::color::Gradient;
 use egui::load::SizedTexture;
 
 use egui::{
-    pos2, Color32, ColorImage, CursorIcon, ImageButton, ImageData, Rect, Response, TextureId, Ui,
-    Vec2,
+    Color32, ColorImage, CursorIcon, ImageButton, ImageData, Rect, Response, TextureId, Ui, Vec2,
+    pos2,
 };
 use std::{collections::HashMap, sync::Arc};
 

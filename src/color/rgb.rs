@@ -1,11 +1,11 @@
 #![allow(clippy::many_single_char_names)]
 use crate::{
-    color::{hsv::Hsv, CIEColor, Cmyk, Color, Hsl, Xyz, CIE_E, CIE_K, U8_MAX},
+    color::{CIE_E, CIE_K, CIEColor, Cmyk, Color, Hsl, U8_MAX, Xyz, hsv::Hsv},
     math::Matrix1x3,
 };
 use egui::{
-    ecolor::{Hsva, HsvaGamma},
     Color32, Rgba,
+    ecolor::{Hsva, HsvaGamma},
 };
 use serde::{Deserialize, Serialize};
 

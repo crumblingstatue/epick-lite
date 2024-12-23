@@ -128,9 +128,11 @@ mod tests {
         ]);
         assert_eq!(got, want);
 
-        assert!(Matrix3::from([[1., 2., 3.], [4., 5., 6.], [7., 8., 9.]])
-            .inverse()
-            .is_none());
+        assert!(
+            Matrix3::from([[1., 2., 3.], [4., 5., 6.], [7., 8., 9.]])
+                .inverse()
+                .is_none()
+        );
     }
 
     #[test]

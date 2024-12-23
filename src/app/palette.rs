@@ -4,8 +4,9 @@ use crate::{
     context::FrameCtx,
     save_to_clipboard,
     ui::{
-        colorbox::{ColorBox, COLORBOX_DRAG_TOOLTIP},
-        drop_target, icon, SPACE,
+        SPACE,
+        colorbox::{COLORBOX_DRAG_TOOLTIP, ColorBox},
+        drop_target, icon,
     },
 };
 
@@ -213,13 +214,10 @@ impl App {
                             if let Some(re) = cb.display(ctx, ui) {
                                 let re = re.interact(egui::Sense::drag());
                                 if re.drag_started_by(egui::PointerButton::Primary) {
-                                    egui::DragAndDrop::set_payload(
-                                        ctx.egui,
-                                        ColorIdx {
-                                            pal_idx: index,
-                                            col_idx: i,
-                                        },
-                                    );
+                                    egui::DragAndDrop::set_payload(ctx.egui, ColorIdx {
+                                        pal_idx: index,
+                                        col_idx: i,
+                                    });
                                 }
                                 if ui.ctx().dragged_id() == Some(re.id)
                                     && egui::DragAndDrop::has_any_payload(ui.ctx())

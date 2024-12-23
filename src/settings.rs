@@ -268,7 +268,7 @@ mod tests {
     use crate::{
         color::{ChromaticAdaptationMethod, ColorHarmony, Illuminant, RgbWorkingSpace},
         math::eq_f32,
-        settings::{Settings, DEFAULT_COLOR_SIZE},
+        settings::{DEFAULT_COLOR_SIZE, Settings},
         ui::layout::HarmonyLayout,
     };
     use std::fs;

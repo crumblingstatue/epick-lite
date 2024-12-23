@@ -1,10 +1,11 @@
 use crate::color::{
-    xyY, CIEColor, Cmyk, Color, Hsl, Hsv, Illuminant, Lab, LchAB, LchUV, Luv, Palette,
-    RgbWorkingSpace, Xyz,
+    CIEColor, Cmyk, Color, Hsl, Hsv, Illuminant, Lab, LchAB, LchUV, Luv, Palette, RgbWorkingSpace,
+    Xyz, xyY,
 };
 
 use anyhow::{Error, Result};
 use nom::{
+    Err, IResult, Parser,
     branch::alt,
     bytes::complete::{tag, take_while},
     character::complete::{char, digit1, space0},
@@ -12,7 +13,6 @@ use nom::{
     error::{ErrorKind, FromExternalError, ParseError},
     multi::many0,
     sequence::{delimited, preceded, tuple},
-    Err, IResult, Parser,
 };
 use serde::{Deserialize, Serialize};
 use std::{fmt::Write, num::ParseIntError};
@@ -501,8 +501,8 @@ fn parse_color_format(i: &str) -> IResult<&str, CustomColorFormat, ColorParseErr
 #[cfg(test)]
 mod tests {
     use crate::color::{
-        format::{ColorField, ColorSymbol, CustomColorFormat, DigitFormat, FormatToken},
         Color, Illuminant, Rgb, RgbWorkingSpace,
+        format::{ColorField, ColorSymbol, CustomColorFormat, DigitFormat, FormatToken},
     };
     macro_rules! field {
         ($sym:tt) => {

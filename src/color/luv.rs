@@ -1,4 +1,4 @@
-use crate::color::{illuminant::Illuminant, LchUV, Xyz, CIE_E, CIE_K};
+use crate::color::{CIE_E, CIE_K, LchUV, Xyz, illuminant::Illuminant};
 
 use serde::{Deserialize, Serialize};
 

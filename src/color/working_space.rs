@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 use crate::{
-    color::{illuminant::Illuminant, xyY, Rgb},
+    color::{Rgb, illuminant::Illuminant, xyY},
     math::{Matrix1x3, Matrix3},
 };
 

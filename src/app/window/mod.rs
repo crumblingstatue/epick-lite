@@ -7,7 +7,7 @@ mod settings;
 use crate::ui::colors::*;
 
 pub use custom_formats::CustomFormatsWindow;
-use egui::{epaint::Shadow, Frame, Margin, Rounding, Slider, Stroke, Ui};
+use egui::{Frame, Margin, Rounding, Slider, Stroke, Ui, epaint::Shadow};
 pub use export::ExportWindow;
 pub use help::HelpWindow;
 pub use palette_formats::PaletteFormatsWindow;

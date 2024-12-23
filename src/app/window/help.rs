@@ -1,6 +1,6 @@
 use crate::app::{
-    window::{self, WINDOW_X_OFFSET, WINDOW_Y_OFFSET},
     KEYBINDINGS,
+    window::{self, WINDOW_X_OFFSET, WINDOW_Y_OFFSET},
 };
 
 use egui::{Label, RichText, Window};

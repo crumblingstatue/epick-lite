@@ -5,7 +5,7 @@ use crate::{
     display_picker::{self, DisplayPickerExt},
     error::append_global_error,
     ui::{
-        colorbox::{ColorBox, COLORBOX_PICK_TOOLTIP},
+        colorbox::{COLORBOX_PICK_TOOLTIP, ColorBox},
         icon,
     },
 };

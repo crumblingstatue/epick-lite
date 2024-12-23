@@ -3,7 +3,7 @@ use egui::ComboBox;
 use crate::{
     color::{CustomPaletteFormat, PaletteFormat},
     context::FrameCtx,
-    ui::{icon, SPACE},
+    ui::{SPACE, icon},
 };
 
 #[derive(Default, Clone, Debug)]

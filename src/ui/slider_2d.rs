@@ -1,8 +1,8 @@
 use super::slider_1d::NUM_OF_VERTICES;
 
 use crate::color::Color;
-use eframe::egui::{epaint::Mesh, lerp, remap_clamp, Sense, Shape, Stroke, Vec2};
-use egui::{epaint::CircleShape, pos2, Color32, CursorIcon, Response, Ui};
+use eframe::egui::{Sense, Shape, Stroke, Vec2, epaint::Mesh, lerp, remap_clamp};
+use egui::{Color32, CursorIcon, Response, Ui, epaint::CircleShape, pos2};
 use std::ops::RangeInclusive;
 
 pub fn color(

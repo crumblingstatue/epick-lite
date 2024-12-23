@@ -6,9 +6,8 @@ pub mod slider_2d;
 use crate::color::{Color, ColorFormat, Illuminant, RgbWorkingSpace};
 
 use egui::{
-    ecolor,
+    Color32, InnerResponse, Rect, Sense, Shape, Stroke, Ui, Vec2, Visuals, ecolor,
     style::{Selection, Widgets},
-    Color32, InnerResponse, Rect, Sense, Shape, Stroke, Ui, Vec2, Visuals,
 };
 
 pub const SPACE: f32 = 7.;
@@ -112,9 +111,8 @@ pub fn drop_target<R>(
         stroke.color = ecolor::tint_color_towards(stroke.color, ui.visuals().window_fill());
     }
 
-    ui.painter().set(
-        where_to_put_background,
-        egui::epaint::RectShape {
+    ui.painter()
+        .set(where_to_put_background, egui::epaint::RectShape {
             rounding: style.rounding,
             fill,
             stroke,
@@ -122,8 +120,7 @@ pub fn drop_target<R>(
             fill_texture_id: egui::TextureId::Managed(0),
             uv: Rect::ZERO,
             blur_width: 0.0,
-        },
-    );
+        });
 
     InnerResponse::new(ret, response)
 }

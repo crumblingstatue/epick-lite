@@ -6,16 +6,17 @@ pub mod window;
 use crate::{
     color::{Color, ColorHarmony, Gradient},
     context::{AppCtx, FrameCtx},
-    error::{append_global_error, DisplayError, ERROR_STACK},
-    keybinding::{default_keybindings, KeyBindings},
-    render::{render_gradient, TextureManager},
+    error::{DisplayError, ERROR_STACK, append_global_error},
+    keybinding::{KeyBindings, default_keybindings},
+    render::{TextureManager, render_gradient},
     save_to_clipboard,
     screen_size::ScreenSize,
     settings::{self},
     ui::{
-        colorbox::{ColorBox, COLORBOX_PICK_TOOLTIP},
+        HALF_SPACE, SPACE,
+        colorbox::{COLORBOX_PICK_TOOLTIP, ColorBox},
         colors::*,
-        dark_visuals, icon, light_visuals, HALF_SPACE, SPACE,
+        dark_visuals, icon, light_visuals,
     },
     zoom_picker::ZoomPicker,
 };

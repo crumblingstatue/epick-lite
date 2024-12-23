@@ -2,12 +2,12 @@ use crate::{
     app::{App, ColorHarmony, FrameCtx},
     color::{Color, Gradient},
     ui::{
-        colorbox::{ColorBox, COLORBOX_PICK_TOOLTIP},
+        colorbox::{COLORBOX_PICK_TOOLTIP, ColorBox},
         layout::HarmonyLayout,
     },
 };
 
-use egui::{vec2, ComboBox, Grid, Ui, Vec2};
+use egui::{ComboBox, Grid, Ui, Vec2, vec2};
 
 macro_rules! scheme_window_impl {
     ($title:literal, $self:ident, $ctx:ident, $ui:ident, $win:ident, $size_field:ident, $colors:expr) => {{

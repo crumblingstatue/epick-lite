@@ -1,6 +1,6 @@
 #![allow(clippy::many_single_char_names)]
 use crate::{
-    color::{rgb::Rgb, CIEColor, Cmyk, Color, Hsl, Xyz},
+    color::{CIEColor, Cmyk, Color, Hsl, Xyz, rgb::Rgb},
     math,
 };
 use egui::ecolor::{Color32, Hsva, Rgba};

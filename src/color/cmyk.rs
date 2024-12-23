@@ -1,7 +1,7 @@
 use egui::ecolor::{Color32, Hsva, Rgba};
 
 use crate::{
-    color::{hsv::Hsv, rgb::Rgb, CIEColor, Color, Hsl, Xyz},
+    color::{CIEColor, Color, Hsl, Xyz, hsv::Hsv, rgb::Rgb},
     math,
 };
 use serde::{Deserialize, Serialize};

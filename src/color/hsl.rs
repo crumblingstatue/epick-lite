@@ -1,4 +1,4 @@
-use crate::color::{hsv::Hsv, rgb::Rgb, CIEColor, Cmyk, Color, Xyz};
+use crate::color::{CIEColor, Cmyk, Color, Xyz, hsv::Hsv, rgb::Rgb};
 use egui::ecolor::{Color32, Hsva, Rgba};
 use serde::{Deserialize, Serialize};
 
