@@ -37,5 +37,5 @@ const APP_CANVAS_ID: &str = "epick-lite - Color Picker";
 
 fn main() {
     let opts = eframe::NativeOptions::default();
-    eframe::run_native(APP_CANVAS_ID, opts, Box::new(|ctx| app::App::init(ctx))).unwrap();
+    eframe::run_native(APP_CANVAS_ID, opts, Box::new(|ctx| Ok(app::App::init(ctx)))).unwrap();
 }

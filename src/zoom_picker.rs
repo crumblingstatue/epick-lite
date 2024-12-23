@@ -170,9 +170,15 @@ impl ZoomPicker {
         if ctx.app.show_zoom_window {
             let rect = re.rect;
             let pos = egui::pos2(rect.min.x, rect.max.y);
-            egui::show_tooltip_at(ctx.egui, egui::Id::new("zoomed-tooltip"), Some(pos), |ui| {
-                self.handle_zoom_picker(ui, picker);
-            });
+            egui::show_tooltip_at(
+                ctx.egui,
+                ui.layer_id(),
+                egui::Id::new("zoomed-tooltip"),
+                pos,
+                |ui| {
+                    self.handle_zoom_picker(ui, picker);
+                },
+            );
         }
     }
 

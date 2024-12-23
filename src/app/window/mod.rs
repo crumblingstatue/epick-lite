@@ -79,12 +79,12 @@ impl ShadesWindow {
     pub fn sliders(&mut self, ui: &mut Ui) {
         ui.add(
             Slider::new(&mut self.num_of_shades, u8::MIN..=50)
-                .clamp_to_range(true)
+                .clamping(egui::SliderClamping::Always)
                 .text("# of shades"),
         );
         ui.add(
             Slider::new(&mut self.shade_color_size, 20.0..=200.)
-                .clamp_to_range(true)
+                .clamping(egui::SliderClamping::Always)
                 .text("color size"),
         );
     }
@@ -111,12 +111,12 @@ impl TintsWindow {
     pub fn sliders(&mut self, ui: &mut Ui) {
         ui.add(
             Slider::new(&mut self.num_of_tints, u8::MIN..=50)
-                .clamp_to_range(true)
+                .clamping(egui::SliderClamping::Always)
                 .text("# of tints"),
         );
         ui.add(
             Slider::new(&mut self.tint_color_size, 20.0..=200.)
-                .clamp_to_range(true)
+                .clamping(egui::SliderClamping::Always)
                 .text("color size"),
         );
     }
@@ -147,7 +147,7 @@ impl HuesWindow {
     pub fn sliders(&mut self, ui: &mut Ui) {
         ui.add(
             Slider::new(&mut self.hues_step, 0.01..=0.1)
-                .clamp_to_range(true)
+                .clamping(egui::SliderClamping::Always)
                 .text("step"),
         );
         let max_hues = (0.5 / self.hues_step).round() as u8;
@@ -156,12 +156,12 @@ impl HuesWindow {
         }
         ui.add(
             Slider::new(&mut self.num_of_hues, u8::MIN..=max_hues)
-                .clamp_to_range(true)
+                .clamping(egui::SliderClamping::Always)
                 .text("# of hues"),
         );
         ui.add(
             Slider::new(&mut self.hue_color_size, 20.0..=200.)
-                .clamp_to_range(true)
+                .clamping(egui::SliderClamping::Always)
                 .text("color size"),
         );
     }

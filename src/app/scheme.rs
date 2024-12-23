@@ -112,7 +112,7 @@ impl App {
             self.harmony_layout_combobox(ctx, ui);
             ui.add(
                 egui::DragValue::new(&mut ctx.app.settings.harmony_color_size)
-                    .clamp_range(20.0..=ui.available_width() / 4.),
+                    .range(20.0..=ui.available_width() / 4.),
             );
             ui.checkbox(&mut ctx.app.settings.harmony_display_color_label, "labels");
         });
@@ -272,7 +272,7 @@ impl App {
     }
 
     fn harmony_layout_combobox(&self, ctx: &mut FrameCtx<'_>, ui: &mut Ui) {
-        ComboBox::from_id_source("Layout")
+        ComboBox::from_id_salt("Layout")
             .selected_text(ctx.app.settings.harmony_layout.as_ref())
             .show_ui(ui, |ui| {
                 ui.selectable_value(
@@ -300,7 +300,7 @@ impl App {
 
     fn harmony_combobox(&self, ctx: &mut FrameCtx<'_>, ui: &mut Ui) {
         let harmony = &mut ctx.app.settings.harmony;
-        ComboBox::from_id_source("Harmony")
+        ComboBox::from_id_salt("Harmony")
             .selected_text(harmony.as_ref())
             .show_ui(ui, |ui| {
                 ui.selectable_value(

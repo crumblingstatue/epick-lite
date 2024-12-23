@@ -28,7 +28,7 @@ use egui::{
 };
 use once_cell::sync::{Lazy, OnceCell};
 use serde::{Deserialize, Serialize};
-use std::sync::RwLock;
+use std::sync::{Arc, RwLock};
 
 static ADD_DESCR: &str = "Add this color to saved colors";
 static ERROR_DISPLAY_DURATION: u64 = 20;
@@ -171,9 +171,9 @@ impl App {
         let mut fonts = egui::FontDefinitions::default();
         fonts.font_data.insert(
             "Firacode".to_string(),
-            egui::FontData::from_static(include_bytes!(
+            Arc::new(egui::FontData::from_static(include_bytes!(
                 "../../assets/fonts/FiraCode/FiraCode-Regular.ttf"
-            )),
+            ))),
         );
         fonts
             .families
@@ -382,7 +382,7 @@ impl App {
                     .fixed_size((ctx.app.sidepanel.box_width, 50.))
                     .show(ui.ctx(), |ui| {
                         let label =
-                            Label::new(RichText::new(e.message()).color(Color32::RED)).wrap(true);
+                            Label::new(RichText::new(e.message()).color(Color32::RED)).wrap();
                         ui.add(label);
                     })
                 {
@@ -497,7 +497,7 @@ impl App {
         ui.add_space(SPACE);
 
         ScrollArea::vertical()
-            .id_source("picker scroll")
+            .id_salt("picker scroll")
             .show(ui, |ui| {
                 ui.separator();
                 self.harmonies_ctl_ui(ctx, ui);

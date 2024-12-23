@@ -89,7 +89,11 @@ pub fn drop_target<R>(
     let outer_rect_bounds = ui.available_rect_before_wrap();
     let inner_rect = outer_rect_bounds.shrink2(margin);
     let where_to_put_background = ui.painter().add(Shape::Noop);
-    let mut content_ui = ui.child_ui(inner_rect, *ui.layout());
+    let mut content_ui = ui.new_child(
+        egui::UiBuilder::new()
+            .max_rect(inner_rect)
+            .layout(*ui.layout()),
+    );
     let ret = body(&mut content_ui);
     let outer_rect = Rect::from_min_max(outer_rect_bounds.min, content_ui.min_rect().max + margin);
     let (rect, response) = ui.allocate_at_least(outer_rect.size(), Sense::hover());
@@ -117,6 +121,7 @@ pub fn drop_target<R>(
             rect,
             fill_texture_id: egui::TextureId::Managed(0),
             uv: Rect::ZERO,
+            blur_width: 0.0,
         },
     );
 

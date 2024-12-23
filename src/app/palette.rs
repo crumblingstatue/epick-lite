@@ -34,7 +34,7 @@ impl App {
             });
             ui.add(
                 egui::Slider::new(&mut ctx.app.palettes_tab_color_size, 25.0..=100.)
-                    .clamp_to_range(true)
+                    .clamping(egui::SliderClamping::Always)
                     .text("color size"),
             );
             ui.horizontal(|ui| {
