@@ -123,7 +123,7 @@ pub enum ColorFormat<'fmt> {
     Custom(&'fmt str),
 }
 
-impl<'fmt> ColorFormat<'fmt> {
+impl ColorFormat<'_> {
     pub fn no_degree(self) -> Self {
         use ColorFormat::*;
         match self {

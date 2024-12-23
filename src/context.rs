@@ -226,7 +226,7 @@ pub struct FrameCtx<'frame> {
     pub frame: Option<&'frame mut eframe::Frame>,
 }
 
-impl<'frame> FrameCtx<'frame> {
+impl FrameCtx<'_> {
     pub fn tex_allocator(&self) -> TextureAllocator {
         Some(self.egui.tex_manager())
     }
