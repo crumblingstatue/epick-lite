@@ -332,8 +332,6 @@ impl App {
         if let Err(e) = self.windows.export.display(ctx) {
             append_global_error(e);
         }
-
-        self.windows.help.display(ctx.egui);
     }
 
     fn central_panel(&mut self, ctx: &mut FrameCtx<'_>) {
@@ -362,6 +360,7 @@ impl App {
                 CentralPanelTab::Tints => self.tints_window(ctx, ui),
                 CentralPanelTab::Settings => self.display_settings_stuff(ctx, ui),
             });
+        self.windows.help.display(ctx.egui);
     }
 
     fn picker_ui(&mut self, ctx: &mut FrameCtx<'_>, ui: &mut Ui) {
