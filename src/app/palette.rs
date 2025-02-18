@@ -119,6 +119,7 @@ impl App {
                         re.rect,
                         2.0,
                         egui::Stroke::new(2.0, egui::Color32::WHITE),
+                        egui::StrokeKind::Outside,
                     );
                     if ui.input(|inp| inp.pointer.primary_released()) {
                         *action = Some(UiAction::RemPush {
@@ -131,6 +132,7 @@ impl App {
                         re.rect,
                         2.0,
                         egui::Stroke::new(2.0, egui::Color32::GRAY),
+                        egui::StrokeKind::Outside,
                     );
                 }
                 self.display_palette_colors(palette, index, ctx, ui, action);
@@ -214,10 +216,13 @@ impl App {
                             if let Some(re) = cb.display(ctx, ui) {
                                 let re = re.interact(egui::Sense::drag());
                                 if re.drag_started_by(egui::PointerButton::Primary) {
-                                    egui::DragAndDrop::set_payload(ctx.egui, ColorIdx {
-                                        pal_idx: index,
-                                        col_idx: i,
-                                    });
+                                    egui::DragAndDrop::set_payload(
+                                        ctx.egui,
+                                        ColorIdx {
+                                            pal_idx: index,
+                                            col_idx: i,
+                                        },
+                                    );
                                 }
                                 if ui.ctx().dragged_id() == Some(re.id)
                                     && egui::DragAndDrop::has_any_payload(ui.ctx())
@@ -226,6 +231,7 @@ impl App {
                                         re.rect,
                                         2.0,
                                         egui::Stroke::new(3.0, egui::Color32::WHITE),
+                                        egui::StrokeKind::Outside,
                                     );
                                 }
                                 if let Some(idx) = re.dnd_hover_payload::<ColorIdx>() {
@@ -233,6 +239,7 @@ impl App {
                                         re.rect,
                                         2.0,
                                         egui::Stroke::new(3.0, egui::Color32::WHITE),
+                                        egui::StrokeKind::Outside,
                                     );
                                     if ui.input(|inp| inp.pointer.primary_released()) {
                                         *action = Some(UiAction::Swap {

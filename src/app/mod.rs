@@ -233,7 +233,7 @@ impl App {
             } else {
                 *L_BG_0
             },
-            inner_margin: Margin::symmetric(15., 10.),
+            inner_margin: Margin::symmetric(15, 10),
             ..Default::default()
         };
         egui::TopBottomPanel::top("top panel")
@@ -345,10 +345,10 @@ impl App {
             },
 
             inner_margin: Margin {
-                left: 10.,
-                top: 5.,
-                right: 0.,
-                bottom: 0.,
+                left: 10,
+                top: 5,
+                right: 0,
+                bottom: 0,
             },
             ..Default::default()
         };

@@ -47,7 +47,8 @@ pub fn color(
     }
     ui.painter().add(Shape::mesh(mesh)); // fill
 
-    ui.painter().rect_stroke(rect, 0.0, visuals.bg_stroke); // outline
+    ui.painter()
+        .rect_stroke(rect, 0.0, visuals.bg_stroke, egui::StrokeKind::Outside); // outline
 
     let x = remap_clamp(*x_value, x_range, rect.left()..=rect.right());
     let y = remap_clamp(*y_value, y_range, rect.bottom()..=rect.top());

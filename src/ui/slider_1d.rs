@@ -52,7 +52,8 @@ pub fn color(
         ui.painter().add(Shape::mesh(mesh));
     }
 
-    ui.painter().rect_stroke(rect, 0.0, visuals.bg_stroke); // outline
+    ui.painter()
+        .rect_stroke(rect, 0.0, visuals.bg_stroke, egui::StrokeKind::Outside); // outline
 
     {
         let x = *value;

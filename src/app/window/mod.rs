@@ -5,9 +5,10 @@ mod palette_formats;
 mod settings;
 
 use crate::ui::colors::*;
+use egui::CornerRadius;
 
 pub use custom_formats::CustomFormatsWindow;
-use egui::{Frame, Margin, Rounding, Slider, Stroke, Ui, epaint::Shadow};
+use egui::{Frame, Margin, Slider, Stroke, Ui, epaint::Shadow};
 pub use export::ExportWindow;
 pub use help::HelpWindow;
 pub use palette_formats::PaletteFormatsWindow;
@@ -23,20 +24,20 @@ pub fn default_frame(is_dark_mode: bool) -> Frame {
         } else {
             *L_BG_3_TRANSPARENT
         },
-        inner_margin: Margin::symmetric(15., 15.),
-        rounding: Rounding::same(5.),
+        inner_margin: Margin::symmetric(15, 15),
+        corner_radius: CornerRadius::same(5),
         shadow: if is_dark_mode {
             Shadow {
-                offset: egui::vec2(2.0, 2.0),
-                blur: 40.0,
-                spread: 3.0,
+                offset: [2, 2],
+                blur: 40,
+                spread: 3,
                 color: egui::Color32::BLACK,
             }
         } else {
             Shadow {
-                offset: egui::vec2(2.0, 2.0),
-                blur: 40.0,
-                spread: 3.0,
+                offset: [2, 2],
+                blur: 40,
+                spread: 3,
                 color: egui::Color32::GRAY,
             }
         },

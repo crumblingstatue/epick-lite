@@ -111,16 +111,19 @@ pub fn drop_target<R>(
         stroke.color = ecolor::tint_color_towards(stroke.color, ui.visuals().window_fill());
     }
 
-    ui.painter()
-        .set(where_to_put_background, egui::epaint::RectShape {
-            rounding: style.rounding,
+    ui.painter().set(
+        where_to_put_background,
+        egui::epaint::RectShape {
+            corner_radius: style.corner_radius,
             fill,
             stroke,
             rect,
-            fill_texture_id: egui::TextureId::Managed(0),
-            uv: Rect::ZERO,
             blur_width: 0.0,
-        });
+            stroke_kind: egui::StrokeKind::Outside,
+            round_to_pixels: None,
+            brush: None,
+        },
+    );
 
     InnerResponse::new(ret, response)
 }
