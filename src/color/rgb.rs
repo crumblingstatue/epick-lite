@@ -1,4 +1,3 @@
-#![allow(clippy::many_single_char_names)]
 use crate::{
     color::{CIE_E, CIE_K, CIEColor, Cmyk, Color, Hsl, U8_MAX, Xyz, hsv::Hsv},
     math::Matrix1x3,
