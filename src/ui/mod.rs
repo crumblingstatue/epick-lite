@@ -6,7 +6,7 @@ pub mod slider_2d;
 use crate::color::{Color, ColorFormat, Illuminant, RgbWorkingSpace};
 
 use egui::{
-    Color32, InnerResponse, Rect, Sense, Shape, Stroke, Ui, Vec2, Visuals, ecolor,
+    InnerResponse, Rect, Sense, Shape, Stroke, Ui, Vec2, Visuals, ecolor,
     style::{Selection, Widgets},
 };
 
@@ -140,33 +140,6 @@ pub fn color_tooltip(
         color.display(display_format, ws, illuminant),
         text.unwrap_or_default()
     )
-}
-
-pub fn light_visuals() -> Visuals {
-    let mut widgets = Widgets::light();
-    widgets.noninteractive.bg_fill = *L_BG_4_TRANSPARENT;
-    widgets.inactive.bg_fill = *L_BG_3_TRANSPARENT;
-    widgets.inactive.bg_stroke = Stroke::new(0.5, *D_BG_3);
-    widgets.inactive.fg_stroke = Stroke::new(0.5, *D_BG_3);
-    widgets.hovered.bg_fill = *L_BG_4_TRANSPARENT;
-    widgets.hovered.bg_stroke = Stroke::new(1., *D_BG_1);
-    widgets.hovered.fg_stroke = Stroke::new(1., *D_BG_1);
-    widgets.active.bg_fill = *L_BG_5_TRANSPARENT;
-    widgets.active.fg_stroke = Stroke::new(1.5, *D_BG_0);
-    widgets.active.bg_stroke = Stroke::new(1.5, *D_BG_0);
-
-    Visuals {
-        dark_mode: false,
-        override_text_color: Some(*L_FG_0),
-        extreme_bg_color: Color32::WHITE,
-        selection: Selection {
-            bg_fill: *L_BG_5,
-            stroke: Stroke::new(0.7, *D_BG_0),
-        },
-        popup_shadow: Shadow::NONE,
-        widgets,
-        ..Default::default()
-    }
 }
 
 pub fn dark_visuals() -> Visuals {

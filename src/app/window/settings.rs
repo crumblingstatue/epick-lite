@@ -18,11 +18,8 @@ const UI_SCALE_RANGE: std::ops::RangeInclusive<f32> = 0.25..=5.0;
 
 #[derive(Debug, Default)]
 pub struct SettingsWindow {
-    pub show: bool,
     pub error: Option<String>,
     pub message: Option<String>,
-    selected_display_fmt: String,
-    selected_clipboard_fmt: String,
     pub custom_formats_window: CustomFormatsWindow,
     pub palette_formats_window: PaletteFormatsWindow,
     tab: Tab,

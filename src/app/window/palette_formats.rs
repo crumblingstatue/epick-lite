@@ -14,7 +14,6 @@ struct NamedPaletteFormat {
 
 #[derive(Default, Debug)]
 pub struct PaletteFormatsWindow {
-    pub show: bool,
     current_format: Option<NamedPaletteFormat>,
 }
 impl PaletteFormatsWindow {

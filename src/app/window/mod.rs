@@ -61,7 +61,6 @@ pub fn apply_default_style(ui: &mut Ui, is_dark_mode: bool) {
 
 #[derive(Debug)]
 pub struct ShadesWindow {
-    pub is_open: bool,
     pub num_of_shades: u8,
     pub shade_color_size: f32,
 }
@@ -69,7 +68,6 @@ pub struct ShadesWindow {
 impl Default for ShadesWindow {
     fn default() -> Self {
         Self {
-            is_open: false,
             num_of_shades: 6,
             shade_color_size: DEFAULT_COLOR_SIZE,
         }
@@ -93,7 +91,6 @@ impl ShadesWindow {
 
 #[derive(Debug)]
 pub struct TintsWindow {
-    pub is_open: bool,
     pub num_of_tints: u8,
     pub tint_color_size: f32,
 }
@@ -101,7 +98,6 @@ pub struct TintsWindow {
 impl Default for TintsWindow {
     fn default() -> Self {
         Self {
-            is_open: false,
             num_of_tints: 6,
             tint_color_size: DEFAULT_COLOR_SIZE,
         }
@@ -125,7 +121,6 @@ impl TintsWindow {
 
 #[derive(Debug)]
 pub struct HuesWindow {
-    pub is_open: bool,
     pub num_of_hues: u8,
     pub hue_color_size: f32,
     pub hues_step: f32,
@@ -136,7 +131,6 @@ const DEFAULT_COLOR_SIZE: f32 = 48.0;
 impl Default for HuesWindow {
     fn default() -> Self {
         Self {
-            is_open: false,
             num_of_hues: 4,
             hue_color_size: DEFAULT_COLOR_SIZE,
             hues_step: 0.05,

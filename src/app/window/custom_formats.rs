@@ -8,7 +8,6 @@ use crate::{
 
 #[derive(Default, Debug)]
 pub struct CustomFormatsWindow {
-    pub show: bool,
     pub new_name: String,
     pub edit_key: String,
     pub new_key: String,

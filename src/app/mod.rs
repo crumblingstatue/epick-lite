@@ -1,4 +1,3 @@
-#![allow(dead_code)]
 mod palette;
 mod scheme;
 pub mod window;
@@ -16,7 +15,7 @@ use crate::{
         HALF_SPACE, SPACE,
         colorbox::{COLORBOX_PICK_TOOLTIP, ColorBox},
         colors::*,
-        dark_visuals, icon, light_visuals,
+        dark_visuals, icon,
     },
     zoom_picker::ZoomPicker,
 };
@@ -35,7 +34,6 @@ static ADD_DESCR: &str = "Add this color to saved colors";
 static ERROR_DISPLAY_DURATION: u64 = 20;
 
 pub static KEYBINDINGS: Lazy<KeyBindings> = Lazy::new(default_keybindings);
-pub static LIGHT_VISUALS: Lazy<Visuals> = Lazy::new(light_visuals);
 pub static DARK_VISUALS: Lazy<Visuals> = Lazy::new(dark_visuals);
 pub static CONTEXT: OnceCell<RwLock<AppCtx>> = OnceCell::new();
 pub static TEXTURE_MANAGER: Lazy<RwLock<TextureManager>> =
