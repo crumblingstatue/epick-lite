@@ -13,18 +13,7 @@ Install required libraries (only required on Linux):
 $ apt-get install libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
 ```
 
-To manually build **epick** you'll need the latest Rust with `cargo`. To build the project run:
-```
-$ make
-```
-
-To start the web version locally run:
-```
-$ make start_web
-```
-This will build the WASM files and start a simple http server listening at `127.0.0.1:8080`.
-
-To build without `make` checkout the build instructions in the `Makefile`
+To manually build **epick** you'll need the latest Rust with `cargo`.
 
 ## Keyboard shortcuts
 
