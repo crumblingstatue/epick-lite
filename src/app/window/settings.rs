@@ -81,16 +81,15 @@ impl SettingsWindow {
         };
         ui.separator();
         self.save_settings_btn(ctx.app, ui);
-    }
-
-    fn general_settings_ui(&mut self, ui: &mut Ui, ctx: &mut FrameCtx<'_>) {
         if let Some(err) = &self.error {
             ui.colored_label(Color32::RED, err);
         }
         if let Some(msg) = &self.message {
             ui.colored_label(Color32::GREEN, msg);
         }
+    }
 
+    fn general_settings_ui(&mut self, ui: &mut Ui, ctx: &mut FrameCtx<'_>) {
         self.ui_scale_slider(ctx.app, ui);
         ui.add_space(HALF_SPACE);
         self.color_formats(ctx.app, ui);
