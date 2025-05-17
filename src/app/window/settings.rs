@@ -3,7 +3,7 @@ use crate::{
     color::{ChromaticAdaptationMethod, ColorHarmony, Illuminant, PaletteFormat, RgbWorkingSpace},
     context::FrameCtx,
     settings::{ColorDisplayFmtEnum, Settings},
-    ui::{DOUBLE_SPACE, HALF_SPACE, SPACE},
+    ui::{DOUBLE_SPACE, HALF_SPACE},
 };
 
 use egui::{Color32, ComboBox, Ui};
@@ -106,7 +106,6 @@ impl SettingsWindow {
         ui.add_space(HALF_SPACE);
         ui.checkbox(&mut ctx.app.settings.cache_colors, "Cache colors");
         ui.add_space(DOUBLE_SPACE);
-        self.color_spaces(ctx.app, ui);
     }
 
     fn save_settings_btn(&mut self, app_ctx: &mut AppCtx, ui: &mut Ui) {
@@ -170,24 +169,6 @@ impl SettingsWindow {
                     ColorHarmony::Monochromatic.as_ref(),
                 );
             });
-    }
-
-    fn color_spaces(&mut self, app_ctx: &mut AppCtx, ui: &mut Ui) {
-        ui.label("Colors spaces:");
-        ui.horizontal(|ui| {
-            ui.checkbox(&mut app_ctx.settings.color_spaces.rgb, "RGB");
-            ui.checkbox(&mut app_ctx.settings.color_spaces.cmyk, "CMYK");
-            ui.checkbox(&mut app_ctx.settings.color_spaces.hsv, "HSV");
-            ui.checkbox(&mut app_ctx.settings.color_spaces.hsl, "HSL");
-        });
-        ui.add_space(SPACE);
-        ui.label("CIE Color spaces:");
-        ui.horizontal(|ui| {
-            ui.checkbox(&mut app_ctx.settings.color_spaces.luv, "Luv");
-            ui.checkbox(&mut app_ctx.settings.color_spaces.lch_uv, "LCH(uv)");
-            ui.checkbox(&mut app_ctx.settings.color_spaces.lab, "Lab");
-            ui.checkbox(&mut app_ctx.settings.color_spaces.lch_ab, "LCH(ab)");
-        });
     }
 
     fn illuminant(&mut self, app_ctx: &mut AppCtx, ui: &mut Ui) {
