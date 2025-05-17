@@ -20,7 +20,7 @@ impl Default for Palettes {
 }
 
 impl Palettes {
-    pub const FILE_NAME: &'static str = "palettes.json";
+    pub const FILE_NAME: &'static str = "palettes.ron";
 
     pub fn new(palette: NamedPalette) -> Self {
         Self {
@@ -102,17 +102,17 @@ impl Palettes {
     }
 
     /// Loads the saved colors from the specified file located at `path`. The file is expected to
-    /// be a valid json file.
+    /// be a valid ron file.
     pub fn load(path: impl AsRef<Path>) -> Result<Self> {
-        let data = fs::read(path).context("failed to read saved colors file")?;
-        serde_json::from_slice(&data).context("failed to deserialize saved colors file")
+        let data = fs::read_to_string(path).context("failed to read palette file")?;
+        ron::from_str(&data).context("failed to deserialize palette file")
     }
 
-    /// Saves this colors as json file in the provided `path`.
+    /// Saves this colors as ron file in the provided `path`.
     pub fn save(&self, path: impl AsRef<Path>) -> Result<()> {
-        let mut data = Vec::with_capacity(128);
-        serde_json::to_writer(&mut data, &self).context("failed to serialize saved colors")?;
-        fs::write(path, &data).context("failed to write saved colors to a file")
+        let mut data = String::with_capacity(128);
+        ron::ser::to_writer(&mut data, &self).context("failed to serialize palette file")?;
+        fs::write(path, &data).context("failed to write palette to file")
     }
 
     /// Returns system directory where saved colors should be placed joined by the `name` parameter.
