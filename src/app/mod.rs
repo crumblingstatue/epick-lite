@@ -81,8 +81,6 @@ impl eframe::App for App {
                 tex_manager: &mut tex_manager,
                 frame: Some(frame),
             };
-            ctx.egui
-                .output_mut(|out| out.cursor_icon = ctx.app.cursor_icon);
 
             let screen_size = ScreenSize::from(ctx.egui.available_rect());
             if ctx.app.screen_size != screen_size {

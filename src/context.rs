@@ -10,7 +10,6 @@ use crate::{
 };
 
 use eframe::{CreationContext, Storage};
-use egui::CursorIcon;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -24,7 +23,6 @@ pub struct AppCtx {
     pub palettes_tab_display_label: bool,
 
     pub screen_size: ScreenSize,
-    pub cursor_icon: CursorIcon,
     /// Color under cursor
     pub cursor_pick_color: Color,
     /// Currently selected color in the picker
@@ -63,7 +61,6 @@ impl Default for AppCtx {
             palettes_tab_display_label: false,
 
             screen_size: ScreenSize::Desktop(0., 0.),
-            cursor_icon: CursorIcon::default(),
             cursor_pick_color: Color::black(),
             current_selected_color: Color::black(),
             central_panel_tab: CentralPanelTab::Picker,
@@ -92,7 +89,6 @@ impl AppCtx {
             palettes_tab_display_label: false,
 
             screen_size: ScreenSize::Desktop(0., 0.),
-            cursor_icon: CursorIcon::default(),
             cursor_pick_color: Color::black(),
             current_selected_color: Color::black(),
             central_panel_tab: CentralPanelTab::Picker,
