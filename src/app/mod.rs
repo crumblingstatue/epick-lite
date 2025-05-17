@@ -408,6 +408,7 @@ impl App {
                     cb.display(ctx, ui);
                     ui.label("Current");
                     let hover_ui = |ui: &mut egui::Ui| {
+                        ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Extend);
                         ui.label(
                             egui::RichText::new("Copy to clipboard (ctrl+c)")
                                 .color(egui::Color32::GRAY),
