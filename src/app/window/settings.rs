@@ -72,11 +72,15 @@ impl SettingsWindow {
         match self.tab {
             Tab::General => self.general_settings_ui(ui, ctx),
             Tab::Color => self.color_settings_ui(ui, ctx),
-            Tab::ColorFormats => self.custom_formats_window.display(
-                &mut ctx.app.settings,
-                ui,
-                ctx.app.picker.current_color,
-            ),
+            Tab::ColorFormats => {
+                self.color_formats(ctx.app, ui);
+                ui.separator();
+                self.custom_formats_window.display(
+                    &mut ctx.app.settings,
+                    ui,
+                    ctx.app.picker.current_color,
+                )
+            }
             Tab::PaletteFormats => self.palette_formats_window.display(ctx, ui),
         };
         ui.separator();
@@ -91,8 +95,6 @@ impl SettingsWindow {
 
     fn general_settings_ui(&mut self, ui: &mut Ui, ctx: &mut FrameCtx<'_>) {
         self.ui_scale_slider(ctx.app, ui);
-        ui.add_space(HALF_SPACE);
-        self.color_formats(ctx.app, ui);
     }
 
     fn color_settings_ui(&mut self, ui: &mut Ui, ctx: &mut FrameCtx<'_>) {
@@ -308,7 +310,7 @@ impl SettingsWindow {
     }
 
     fn color_formats(&mut self, app_ctx: &mut AppCtx, ui: &mut Ui) {
-        ComboBox::from_label("Color display format")
+        ComboBox::from_label("Display")
             .selected_text(app_ctx.settings.color_display_format.as_ref())
             .show_ui(ui, |ui| {
                 color_format_selection_fill(
@@ -318,7 +320,7 @@ impl SettingsWindow {
                 );
             });
         ui.add_space(HALF_SPACE);
-        ComboBox::from_label("Color clipboard format")
+        ComboBox::from_label("Clipboard")
             .selected_text(
                 app_ctx
                     .settings
@@ -339,7 +341,7 @@ impl SettingsWindow {
                     ui,
                 );
             });
-        ComboBox::from_label("Palette clipboard format")
+        ComboBox::from_label("Palette clipboard")
             .selected_text(app_ctx.settings.palette_clipboard_format.as_ref())
             .show_ui(ui, |ui| {
                 ui.selectable_value(
