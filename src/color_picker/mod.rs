@@ -271,28 +271,14 @@ impl ColorPicker {
     }
 
     fn color_changed(&mut self) -> bool {
-        if self.rgb_changed() {
-            return true;
-        }
-        if self.cmyk_changed() {
-            return true;
-        }
-        if self.hsv_changed() {
-            return true;
-        }
-        if self.hsl_changed() {
-            return true;
-        }
-        if self.luv_changed() {
-            return true;
-        }
-        if self.lch_uv_changed() {
-            return true;
-        }
-        if self.lab_changed() {
-            return true;
-        }
-        self.lch_ab_changed()
+        self.rgb_changed()
+            || self.cmyk_changed()
+            || self.hsv_changed()
+            || self.hsl_changed()
+            || self.luv_changed()
+            || self.lch_uv_changed()
+            || self.lab_changed()
+            || self.lch_ab_changed()
     }
 
     pub fn check_for_change(&mut self) {
