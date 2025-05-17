@@ -21,6 +21,7 @@ impl CustomFormatsWindow {
         ui: &mut egui::Ui,
         preview_color: Color,
     ) {
+        ui.label("Help: {r} {g} {b} {r255} {g255} ...");
         let mut replace = false;
         let keys: Vec<String> = settings.saved_color_formats.keys().cloned().collect();
         let enter_pressed = ui.input(|inp| inp.key_pressed(Key::Enter));
