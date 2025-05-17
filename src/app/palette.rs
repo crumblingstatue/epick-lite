@@ -271,15 +271,14 @@ impl App {
                         color_dst_row = Some(i);
                     }
                 }
-                if let Some(src_row) = color_src_row {
-                    if let Some(dst_row) = color_dst_row {
-                        if ui.input(|inp| inp.pointer.any_released()) {
-                            ctx.app.palettes.move_to_name(&palette.name);
-                            let palette = &mut ctx.app.palettes.current_mut().palette;
-                            if let Some(it) = palette.remove_pos(src_row) {
-                                palette.insert(dst_row, it);
-                            }
-                        }
+                if let Some(src_row) = color_src_row
+                    && let Some(dst_row) = color_dst_row
+                    && ui.input(|inp| inp.pointer.any_released())
+                {
+                    ctx.app.palettes.move_to_name(&palette.name);
+                    let palette = &mut ctx.app.palettes.current_mut().palette;
+                    if let Some(it) = palette.remove_pos(src_row) {
+                        palette.insert(dst_row, it);
                     }
                 }
             })

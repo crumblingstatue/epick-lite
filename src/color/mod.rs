@@ -396,7 +396,7 @@ impl Color {
         let hsv = self.hsv();
         for i in (0..=total).rev() {
             let mut _h = hsv;
-            _h.offset_hue(-1. * step * i as f32);
+            _h.offset_hue(-step * i as f32);
             colors.push(_h.into());
         }
 

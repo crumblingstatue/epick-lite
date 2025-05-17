@@ -414,23 +414,19 @@ impl App {
                         );
                         ui.label(ctx.app.clipboard_color(&ctx.app.picker.current_color));
                     };
-                    if ui
+                    if (ui
                         .button(icon::COPY)
                         .on_hover_ui(hover_ui)
                         .on_hover_cursor(CursorIcon::Alias)
                         .clicked()
                         || ui.input(|inp| {
                             inp.events.iter().any(|ev| matches!(ev, egui::Event::Copy))
-                        })
-                    {
-                        if let Err(e) = save_to_clipboard(
+                        }))
+                        && let Err(e) = save_to_clipboard(
                             ctx.app.clipboard_color(&ctx.app.picker.current_color),
-                        ) {
-                            append_global_error(format!(
-                                "Failed to save color to clipboard - {}",
-                                e
-                            ));
-                        }
+                        )
+                    {
+                        append_global_error(format!("Failed to save color to clipboard - {e}"));
                     }
                     if ui
                         .button(icon::ADD)

@@ -48,7 +48,7 @@ impl<'a> CustomColorFormat<'a> {
     pub fn parse(text: &'a str) -> Result<CustomColorFormat<'a>> {
         match parse_color_format(text).map(|(_, fmt)| fmt) {
             Ok(fmt) => Ok(fmt),
-            Err(e) => Err(Error::msg(format!("failed to parse color format - {}", e))),
+            Err(e) => Err(Error::msg(format!("failed to parse color format - {e}"))),
         }
     }
 
@@ -160,7 +160,7 @@ impl<'a> CustomColorFormat<'a> {
                                 write!(&mut s, "{:.*}", *precision as usize, num)?;
                             }
                             None => {
-                                write!(&mut s, "{:.1}", num)?;
+                                write!(&mut s, "{num:.1}")?;
                             }
                         }
                     }
@@ -173,11 +173,11 @@ impl<'a> CustomColorFormat<'a> {
                         } as u32;
 
                         match digit_format.unwrap_or_default() {
-                            DigitFormat::Decimal => write!(&mut s, "{}", num)?,
-                            DigitFormat::Hex => write!(&mut s, "{:x}", num)?,
-                            DigitFormat::UppercaseHex => write!(&mut s, "{:X}", num)?,
-                            DigitFormat::Octal => write!(&mut s, "{:o}", num)?,
-                            DigitFormat::Float { precision: _ } => write!(&mut s, "{}", num)?,
+                            DigitFormat::Decimal => write!(&mut s, "{num}")?,
+                            DigitFormat::Hex => write!(&mut s, "{num:x}")?,
+                            DigitFormat::UppercaseHex => write!(&mut s, "{num:X}")?,
+                            DigitFormat::Octal => write!(&mut s, "{num:o}")?,
+                            DigitFormat::Float { precision: _ } => write!(&mut s, "{num}")?,
                         }
                     }
                 },

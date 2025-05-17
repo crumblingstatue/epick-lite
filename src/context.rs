@@ -169,12 +169,12 @@ impl AppCtx {
 
     /// Load palettes from appropriate location based on the target arch
     pub fn load_palettes(&mut self, _storage: Option<&dyn Storage>) {
-        if self.settings.cache_colors {
-            if let Some(path) = Palettes::dir("epick") {
-                match Palettes::load(path.join(Palettes::FILE_NAME)) {
-                    Ok(palettes) => self.palettes = palettes,
-                    Err(e) => append_global_error(format!("failed to load palettes, {e:?}")),
-                }
+        if self.settings.cache_colors
+            && let Some(path) = Palettes::dir("epick")
+        {
+            match Palettes::load(path.join(Palettes::FILE_NAME)) {
+                Ok(palettes) => self.palettes = palettes,
+                Err(e) => append_global_error(format!("failed to load palettes, {e:?}")),
             }
         }
     }
@@ -195,7 +195,7 @@ impl AppCtx {
     pub fn add_color(&mut self, color: Color) {
         if !self.palettes.current_mut().palette.add(color) {
             let color_str = self.display_color(&color);
-            append_global_error(format!("Color {} already saved!", color_str));
+            append_global_error(format!("Color {color_str} already saved!"));
         }
     }
 

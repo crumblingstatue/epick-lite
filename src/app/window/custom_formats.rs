@@ -32,7 +32,7 @@ impl CustomFormatsWindow {
                             if ui.button(icon::DELETE).clicked() {
                                 retain = false;
                             }
-                            let text_edit_id = ui.make_persistent_id(format!("ke_{}", k));
+                            let text_edit_id = ui.make_persistent_id(format!("ke_{k}"));
                             if self.edit_key == *k {
                                 let valid = name_valid(&self.new_key, keys.iter());
                                 let edit_re = ui

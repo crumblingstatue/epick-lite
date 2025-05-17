@@ -73,7 +73,7 @@ impl Palette {
     }
 
     pub fn as_gimp_palette(&self, name: &str) -> String {
-        let mut gpl = format!("GIMP Palette\nName: {}.gpl\nColumns: 1\n#\n", name);
+        let mut gpl = format!("GIMP Palette\nName: {name}.gpl\nColumns: 1\n#\n");
         for (i, color) in self.0.iter().enumerate() {
             let color = color.color32();
             let _ = writeln!(

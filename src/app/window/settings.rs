@@ -115,19 +115,18 @@ impl SettingsWindow {
             .button("Save settings")
             .on_hover_cursor(CursorIcon::PointingHand)
             .clicked()
+            && let Some(dir) = Settings::dir("epick")
         {
-            if let Some(dir) = Settings::dir("epick") {
-                if !dir.exists() {
-                    if let Err(e) = fs::create_dir_all(&dir) {
-                        self.set_error(e);
-                    }
-                }
-                let path = dir.join("config.yaml");
-                if let Err(e) = app_ctx.settings.save(&path) {
-                    self.set_error(e);
-                } else {
-                    self.set_message(format!("Successfully saved settings to {}", path.display()));
-                }
+            if !dir.exists()
+                && let Err(e) = fs::create_dir_all(&dir)
+            {
+                self.set_error(e);
+            }
+            let path = dir.join("config.yaml");
+            if let Err(e) = app_ctx.settings.save(&path) {
+                self.set_error(e);
+            } else {
+                self.set_message(format!("Successfully saved settings to {}", path.display()));
             }
         }
     }
@@ -431,7 +430,7 @@ fn color_format_selection_fill<'a, T: From<ColorDisplayFmtEnum> + PartialEq>(
         ui.selectable_value(
             fmt_ref,
             ColorDisplayFmtEnum::Custom(custom.clone()).into(),
-            format!("*{}", custom),
+            format!("*{custom}"),
         );
     }
 }
