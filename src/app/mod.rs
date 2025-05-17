@@ -3,13 +3,13 @@ mod scheme;
 pub mod window;
 
 use crate::{
-    color::{Color, ColorHarmony, Gradient},
+    color::{Color, ColorHarmony, Gradient, PaletteFormat},
     context::{AppCtx, FrameCtx},
     error::{DisplayError, ERROR_STACK, append_global_error},
     keybinding::{KeyBindings, default_keybindings},
     render::{TextureManager, render_gradient},
     screen_size::ScreenSize,
-    settings::{self},
+    settings::{self, ColorDisplayFmtEnum},
     ui::{
         HALF_SPACE, SPACE,
         colorbox::{COLORBOX_PICK_TOOLTIP, ColorBox},
@@ -22,8 +22,8 @@ use window::{ExportWindow, HelpWindow, HuesWindow, SettingsWindow, ShadesWindow,
 
 use eframe::{CreationContext, Storage};
 use egui::{
-    Button, Color32, CursorIcon, Id, Label, Layout, Margin, Rgba, RichText, ScrollArea, Ui, Vec2,
-    Visuals,
+    Button, Color32, ComboBox, CursorIcon, Id, Label, Layout, Margin, Rgba, RichText, ScrollArea,
+    Ui, Vec2, Visuals,
 };
 use serde::{Deserialize, Serialize};
 use std::sync::{Arc, LazyLock, OnceLock, RwLock};
@@ -47,6 +47,7 @@ pub enum CentralPanelTab {
     Shades,
     Tints,
     Settings,
+    Formats,
 }
 
 #[derive(Default)]
@@ -293,6 +294,13 @@ impl App {
                     ctx.app.central_panel_tab = CentralPanelTab::Tints;
                 }
             );
+            add_button_if!(
+                "formats",
+                matches!(ctx.app.central_panel_tab, CentralPanelTab::Formats),
+                {
+                    ctx.app.central_panel_tab = CentralPanelTab::Formats;
+                }
+            );
 
             ui.with_layout(Layout::right_to_left(eframe::emath::Align::Center), |ui| {
                 if ui
@@ -351,6 +359,7 @@ impl App {
                 CentralPanelTab::Shades => self.shades_window(ctx, ui),
                 CentralPanelTab::Tints => self.tints_window(ctx, ui),
                 CentralPanelTab::Settings => self.display_settings_stuff(ctx, ui),
+                CentralPanelTab::Formats => self.formats_ui(ctx, ui),
             });
         self.windows.help.display(ctx.egui);
     }
@@ -515,6 +524,112 @@ impl App {
             8 => ctx.app.picker.egui(ui),
             _ => {}
         }
+    }
+
+    fn formats_ui(&mut self, ctx: &mut FrameCtx<'_>, ui: &mut Ui) {
+        self.color_formats(ctx.app, ui);
+        ui.separator();
+        self.windows.settings.custom_formats_window.display(
+            &mut ctx.app.settings,
+            ui,
+            ctx.app.picker.current_color,
+        )
+    }
+
+    fn color_formats(&mut self, app_ctx: &mut AppCtx, ui: &mut Ui) {
+        ComboBox::from_label("Display")
+            .selected_text(app_ctx.settings.color_display_format.as_ref())
+            .show_ui(ui, |ui| {
+                color_format_selection_fill(
+                    &mut app_ctx.settings.color_display_format,
+                    app_ctx.settings.saved_color_formats.keys(),
+                    ui,
+                );
+            });
+        ui.add_space(HALF_SPACE);
+        ComboBox::from_label("Clipboard")
+            .selected_text(
+                app_ctx
+                    .settings
+                    .color_clipboard_format
+                    .as_ref()
+                    .map(|f| f.as_ref())
+                    .unwrap_or("Same as display"),
+            )
+            .show_ui(ui, |ui| {
+                ui.selectable_value(
+                    &mut app_ctx.settings.color_clipboard_format,
+                    None,
+                    "Same as display",
+                );
+                color_format_selection_fill(
+                    &mut app_ctx.settings.color_clipboard_format,
+                    app_ctx.settings.saved_color_formats.keys(),
+                    ui,
+                );
+            });
+        ComboBox::from_label("Palette clipboard")
+            .selected_text(app_ctx.settings.palette_clipboard_format.as_ref())
+            .show_ui(ui, |ui| {
+                ui.selectable_value(
+                    &mut app_ctx.settings.palette_clipboard_format,
+                    PaletteFormat::Gimp,
+                    PaletteFormat::Gimp.as_ref(),
+                );
+                ui.selectable_value(
+                    &mut app_ctx.settings.palette_clipboard_format,
+                    PaletteFormat::HexList,
+                    PaletteFormat::HexList.as_ref(),
+                );
+                for (name, fmt) in app_ctx.settings.saved_palette_formats.clone() {
+                    ui.selectable_value(
+                        &mut app_ctx.settings.palette_clipboard_format,
+                        PaletteFormat::Custom(name.clone(), fmt),
+                        name,
+                    );
+                }
+            });
+        ui.checkbox(
+            &mut app_ctx.settings.auto_copy_picked_color,
+            "Auto copy picked color",
+        );
+    }
+}
+
+/// Fill the values for a color format selection.
+///
+/// Used to fill both the display and clipboard format selections.
+fn color_format_selection_fill<'a, T: From<ColorDisplayFmtEnum> + PartialEq>(
+    fmt_ref: &mut T,
+    customs: impl IntoIterator<Item = &'a String>,
+    ui: &mut Ui,
+) {
+    ui.selectable_value(
+        fmt_ref,
+        ColorDisplayFmtEnum::Hex.into(),
+        ColorDisplayFmtEnum::Hex.as_ref(),
+    );
+    ui.selectable_value(
+        fmt_ref,
+        ColorDisplayFmtEnum::HexUppercase.into(),
+        ColorDisplayFmtEnum::HexUppercase.as_ref(),
+    );
+    ui.selectable_value(
+        fmt_ref,
+        ColorDisplayFmtEnum::CssRgb.into(),
+        ColorDisplayFmtEnum::CssRgb.as_ref(),
+    );
+    ui.selectable_value(
+        fmt_ref,
+        ColorDisplayFmtEnum::CssHsl.into(),
+        ColorDisplayFmtEnum::CssHsl.as_ref(),
+    );
+    for custom in customs {
+        ui.selectable_value(
+            fmt_ref,
+            ColorDisplayFmtEnum::Custom(custom.clone()).into(),
+            format!("*{custom}"),
+        );
     }
 }
 
