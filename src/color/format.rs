@@ -12,7 +12,7 @@ use nom::{
     combinator::{map, map_res, opt},
     error::{ErrorKind, FromExternalError, ParseError},
     multi::many0,
-    sequence::{delimited, preceded, tuple},
+    sequence::{delimited, preceded},
 };
 use serde::{Deserialize, Serialize};
 use std::{fmt::Write, num::ParseIntError};
@@ -315,7 +315,8 @@ fn parse_rgb_symbol(i: &str) -> IResult<&str, ColorSymbol, ColorParseError<&str>
         char('r').map(|_| ColorSymbol::Red),
         char('g').map(|_| ColorSymbol::Green),
         char('b').map(|_| ColorSymbol::Blue),
-    ))(i)
+    ))
+    .parse(i)
 }
 
 fn parse_cmyk_symbol(i: &str) -> IResult<&str, ColorSymbol, ColorParseError<&str>> {
@@ -328,7 +329,8 @@ fn parse_cmyk_symbol(i: &str) -> IResult<&str, ColorSymbol, ColorParseError<&str
         char('m').map(|_| ColorSymbol::Magenta),
         char('y').map(|_| ColorSymbol::Yellow),
         char('k').map(|_| ColorSymbol::Key),
-    ))(i)
+    ))
+    .parse(i)
 }
 
 fn parse_hsl_symbol(i: &str) -> IResult<&str, ColorSymbol, ColorParseError<&str>> {
@@ -339,7 +341,8 @@ fn parse_hsl_symbol(i: &str) -> IResult<&str, ColorSymbol, ColorParseError<&str>
         tag("hsl_h").map(|_| ColorSymbol::HSLHue),
         tag("hsl_s").map(|_| ColorSymbol::HSLSaturation),
         tag("hsl_l").map(|_| ColorSymbol::HSLLight),
-    ))(i)
+    ))
+    .parse(i)
 }
 
 fn parse_hsv_symbol(i: &str) -> IResult<&str, ColorSymbol, ColorParseError<&str>> {
@@ -350,7 +353,8 @@ fn parse_hsv_symbol(i: &str) -> IResult<&str, ColorSymbol, ColorParseError<&str>
         tag("hsv_h").map(|_| ColorSymbol::HSVHue),
         tag("hsv_s").map(|_| ColorSymbol::HSVSaturation),
         tag("hsv_v").map(|_| ColorSymbol::HSVValue),
-    ))(i)
+    ))
+    .parse(i)
 }
 
 fn parse_lab_symbol(i: &str) -> IResult<&str, ColorSymbol, ColorParseError<&str>> {
@@ -358,7 +362,8 @@ fn parse_lab_symbol(i: &str) -> IResult<&str, ColorSymbol, ColorParseError<&str>
         tag("lab_l").map(|_| ColorSymbol::LabL),
         tag("lab_a").map(|_| ColorSymbol::LabA),
         tag("lab_b").map(|_| ColorSymbol::LabB),
-    ))(i)
+    ))
+    .parse(i)
 }
 
 fn parse_lch_ab_symbol(i: &str) -> IResult<&str, ColorSymbol, ColorParseError<&str>> {
@@ -366,7 +371,8 @@ fn parse_lch_ab_symbol(i: &str) -> IResult<&str, ColorSymbol, ColorParseError<&s
         tag("lch_ab_l").map(|_| ColorSymbol::LCHabL),
         tag("lch_ab_c").map(|_| ColorSymbol::LCHabC),
         tag("lch_ab_h").map(|_| ColorSymbol::LCHabH),
-    ))(i)
+    ))
+    .parse(i)
 }
 
 fn parse_luv_symbol(i: &str) -> IResult<&str, ColorSymbol, ColorParseError<&str>> {
@@ -374,7 +380,8 @@ fn parse_luv_symbol(i: &str) -> IResult<&str, ColorSymbol, ColorParseError<&str>
         tag("luv_l").map(|_| ColorSymbol::LuvL),
         tag("luv_u").map(|_| ColorSymbol::LuvU),
         tag("luv_v").map(|_| ColorSymbol::LuvV),
-    ))(i)
+    ))
+    .parse(i)
 }
 
 fn parse_lch_uv_symbol(i: &str) -> IResult<&str, ColorSymbol, ColorParseError<&str>> {
@@ -382,7 +389,8 @@ fn parse_lch_uv_symbol(i: &str) -> IResult<&str, ColorSymbol, ColorParseError<&s
         tag("lch_uv_l").map(|_| ColorSymbol::LCHuvL),
         tag("lch_uv_c").map(|_| ColorSymbol::LCHuvC),
         tag("lch_uv_h").map(|_| ColorSymbol::LCHuvH),
-    ))(i)
+    ))
+    .parse(i)
 }
 
 fn parse_xyy_symbol(i: &str) -> IResult<&str, ColorSymbol, ColorParseError<&str>> {
@@ -390,7 +398,8 @@ fn parse_xyy_symbol(i: &str) -> IResult<&str, ColorSymbol, ColorParseError<&str>
         tag("xyy_x").map(|_| ColorSymbol::xyYx),
         tag("xyy_y").map(|_| ColorSymbol::xyYy),
         tag("xyy_Y").map(|_| ColorSymbol::xyYY),
-    ))(i)
+    ))
+    .parse(i)
 }
 
 fn parse_xyz_symbol(i: &str) -> IResult<&str, ColorSymbol, ColorParseError<&str>> {
@@ -398,7 +407,8 @@ fn parse_xyz_symbol(i: &str) -> IResult<&str, ColorSymbol, ColorParseError<&str>
         tag("xyz_x").map(|_| ColorSymbol::XYZx),
         tag("xyz_y").map(|_| ColorSymbol::XYZy),
         tag("xyz_z").map(|_| ColorSymbol::XYZz),
-    ))(i)
+    ))
+    .parse(i)
 }
 
 fn parse_color_symbol(i: &str) -> IResult<&str, ColorSymbol, ColorParseError<&str>> {
@@ -413,30 +423,32 @@ fn parse_color_symbol(i: &str) -> IResult<&str, ColorSymbol, ColorParseError<&st
         parse_lch_uv_symbol,
         parse_xyy_symbol,
         parse_xyz_symbol,
-    ))(i)
+    ))
+    .parse(i)
 }
 
 fn parse_decimal_format(i: &str) -> IResult<&str, DigitFormat, ColorParseError<&str>> {
-    map(char('d'), |_| DigitFormat::Decimal)(i)
+    map(char('d'), |_| DigitFormat::Decimal).parse(i)
 }
 
 fn parse_hex_format(i: &str) -> IResult<&str, DigitFormat, ColorParseError<&str>> {
-    map(char('x'), |_| DigitFormat::Hex)(i)
+    map(char('x'), |_| DigitFormat::Hex).parse(i)
 }
 
 fn parse_hex_uppercase_format(i: &str) -> IResult<&str, DigitFormat, ColorParseError<&str>> {
-    map(char('X'), |_| DigitFormat::UppercaseHex)(i)
+    map(char('X'), |_| DigitFormat::UppercaseHex).parse(i)
 }
 
 fn parse_octal_format(i: &str) -> IResult<&str, DigitFormat, ColorParseError<&str>> {
-    map(char('o'), |_| DigitFormat::Octal)(i)
+    map(char('o'), |_| DigitFormat::Octal).parse(i)
 }
 
 fn parse_float_format(i: &str) -> IResult<&str, DigitFormat, ColorParseError<&str>> {
     map(
         preceded(char('.'), map_res(digit1, |s: &str| s.parse::<u8>())),
         |precision| DigitFormat::Float { precision },
-    )(i)
+    )
+    .parse(i)
 }
 
 fn parse_digit_format(i: &str) -> IResult<&str, DigitFormat, ColorParseError<&str>> {
@@ -449,7 +461,8 @@ fn parse_digit_format(i: &str) -> IResult<&str, DigitFormat, ColorParseError<&st
             parse_decimal_format,
             parse_float_format,
         )),
-    )(i)
+    )
+    .parse(i)
 }
 
 fn parse_color_field(i: &str) -> IResult<&str, ColorField, ColorParseError<&str>> {
@@ -458,7 +471,7 @@ fn parse_color_field(i: &str) -> IResult<&str, ColorField, ColorParseError<&str>
         preceded(
             space0,
             map(
-                tuple((parse_color_symbol, opt(parse_digit_format))),
+                (parse_color_symbol, opt(parse_digit_format)),
                 |(symbol, digit_format)| ColorField {
                     symbol,
                     digit_format,
@@ -466,7 +479,8 @@ fn parse_color_field(i: &str) -> IResult<&str, ColorField, ColorParseError<&str>
             ),
         ),
         preceded(space0, char('}')),
-    )(i)
+    )
+    .parse(i)
 }
 
 #[inline]
@@ -483,7 +497,7 @@ fn parse_text(i: &str) -> IResult<&str, &str, ColorParseError<&str>> {
 }
 
 fn parse_brace(i: &str) -> IResult<&str, FormatToken, ColorParseError<&str>> {
-    map(tag("{"), FormatToken::Text)(i)
+    map(tag("{"), FormatToken::Text).parse(i)
 }
 
 fn parse_format_token(i: &str) -> IResult<&str, FormatToken, ColorParseError<&str>> {
@@ -491,11 +505,12 @@ fn parse_format_token(i: &str) -> IResult<&str, FormatToken, ColorParseError<&st
         map(parse_color_field, FormatToken::Color),
         parse_brace,
         map(parse_text, FormatToken::Text),
-    ))(i)
+    ))
+    .parse(i)
 }
 
 fn parse_color_format(i: &str) -> IResult<&str, CustomColorFormat, ColorParseError<&str>> {
-    map(many0(parse_format_token), CustomColorFormat)(i)
+    map(many0(parse_format_token), CustomColorFormat).parse(i)
 }
 
 #[cfg(test)]
