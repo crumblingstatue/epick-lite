@@ -118,9 +118,6 @@ impl Palettes {
     /// Returns system directory where saved colors should be placed joined by the `name` parameter.
     pub fn dir(name: impl AsRef<str>) -> Option<PathBuf> {
         let name = name.as_ref();
-        if let Some(dir) = dirs::cache_dir() {
-            return Some(dir.join(name));
-        }
 
         if let Some(dir) = dirs::config_dir() {
             return Some(dir.join(name));
