@@ -4,6 +4,7 @@
 
 # epick-lite
 
+Color picker for Linux.
 Fork of [epick](https://github.com/vv9k/epick) with a more "lite" ui and feature set.
 
 ## Build

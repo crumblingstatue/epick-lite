@@ -12,8 +12,6 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
-          - windows-latest
-          - macos-latest
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@main
@@ -29,12 +27,6 @@ jobs:
         - build: linux
           os: ubuntu-latest
           target: x86_64-unknown-linux
-        - build: windows-msvc
-          os: windows-latest
-          target: x86_64-pc-windows-msvc
-        - build: macos
-          os: macos-latest
-          target: aarch64-apple-darwin
 
     steps:
       - name: Set up Rust

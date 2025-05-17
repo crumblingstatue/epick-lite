@@ -1,5 +1,3 @@
-#![cfg(unix)]
-
 use crate::{color::Color, display_picker::DisplayPicker};
 use anyhow::{Context, Result};
 use egui::Color32;

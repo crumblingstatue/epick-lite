@@ -13,41 +13,24 @@ use crate::{
 use egui::{Button, CursorIcon, Ui};
 use std::rc::Rc;
 
-#[cfg(target_os = "linux")]
 use x11rb::protocol::xproto;
 
-#[cfg(windows)]
-use crate::display_picker::windows::{HWND, SW_SHOWDEFAULT, WS_BORDER, WS_POPUP};
-
-#[cfg(target_os = "linux")]
 const ZOOM_IMAGE_WIDTH: u16 = ZOOM_WIN_WIDTH / ZOOM_SCALE as u16;
-#[cfg(target_os = "linux")]
 const ZOOM_IMAGE_HEIGHT: u16 = ZOOM_WIN_HEIGHT / ZOOM_SCALE as u16;
-#[cfg(any(target_os = "linux", windows))]
 const ZOOM_SCALE: f32 = 10.;
-#[cfg(any(target_os = "linux", windows))]
 const ZOOM_WIN_WIDTH: u16 = 160;
-#[cfg(any(target_os = "linux", windows))]
 const ZOOM_WIN_HEIGHT: u16 = 160;
-#[cfg(windows)]
-const ZOOM_WIN_POINTER_RADIUS: u16 = ZOOM_WIN_POINTER_DIAMETER / 2;
-#[cfg(any(target_os = "linux", windows))]
 const ZOOM_IMAGE_X_OFFSET: i32 = ((ZOOM_WIN_WIDTH / 2) as f32 / ZOOM_SCALE) as i32;
-#[cfg(any(target_os = "linux", windows))]
 const ZOOM_IMAGE_Y_OFFSET: i32 = ((ZOOM_WIN_HEIGHT / 2) as f32 / ZOOM_SCALE) as i32;
 
 pub struct ZoomPicker {
     pub display_picker: Option<Rc<dyn DisplayPickerExt>>,
-    #[cfg(windows)]
-    picker_window: Option<HWND>,
 }
 
 impl Default for ZoomPicker {
     fn default() -> Self {
         Self {
             display_picker: crate::display_picker::init_display_picker(),
-            #[cfg(windows)]
-            picker_window: None,
         }
     }
 }
@@ -72,7 +55,6 @@ impl ZoomPicker {
         };
     }
 
-    #[cfg(target_os = "linux")]
     fn handle_zoom_picker(&mut self, ui: &mut Ui, picker: Rc<dyn DisplayPickerExt>) {
         use egui::{Color32, ColorImage, ImageSource, TextureOptions};
 
@@ -115,50 +97,6 @@ impl ZoomPicker {
         }
     }
 
-    #[cfg(windows)]
-    fn handle_zoom_picker(&mut self, _ui: &mut Ui, picker: Rc<dyn DisplayPickerExt>) {
-        if let Some(window) = self.picker_window {
-            let cursor_pos = picker.get_cursor_pos().unwrap_or_default();
-            match picker.get_screenshot(
-                (cursor_pos.0 - ZOOM_IMAGE_X_OFFSET),
-                (cursor_pos.1 - ZOOM_IMAGE_Y_OFFSET),
-                (ZOOM_WIN_WIDTH as f32 / ZOOM_SCALE) as i32,
-                (ZOOM_WIN_HEIGHT as f32 / ZOOM_SCALE) as i32,
-            ) {
-                Ok(bitmap) => {
-                    if let Err(e) = picker.render_bitmap(&bitmap, window, 0, 0, ZOOM_SCALE) {
-                        append_global_error(e);
-                    }
-                    let left = ((ZOOM_WIN_WIDTH / 2) - ZOOM_WIN_POINTER_RADIUS) as i32;
-                    let top = ((ZOOM_WIN_HEIGHT / 2) - ZOOM_WIN_POINTER_RADIUS) as i32;
-                    if let Err(e) = picker.draw_rectangle(
-                        window,
-                        left,
-                        top,
-                        left + ZOOM_WIN_POINTER_DIAMETER as i32,
-                        top + ZOOM_WIN_POINTER_DIAMETER as i32,
-                        true,
-                    ) {
-                        append_global_error(e);
-                    }
-                }
-                Err(e) => {
-                    append_global_error(e);
-                }
-            }
-            if let Err(e) = picker.move_window(
-                window,
-                (cursor_pos.0 + ZOOM_WIN_OFFSET),
-                (cursor_pos.1 + ZOOM_WIN_OFFSET),
-                ZOOM_WIN_WIDTH as i32,
-                ZOOM_WIN_HEIGHT as i32,
-            ) {
-                append_global_error(e);
-            }
-        }
-    }
-
-    #[cfg(any(target_os = "linux", windows))]
     fn zoom_picker_impl(
         &mut self,
         ctx: &mut FrameCtx<'_>,
@@ -181,7 +119,4 @@ impl ZoomPicker {
             );
         }
     }
-
-    #[cfg(not(any(target_os = "linux", windows)))]
-    fn zoom_picker_impl(&mut self, _: &mut FrameCtx<'_>, _: &mut Ui, _: Rc<dyn DisplayPickerExt>) {}
 }
