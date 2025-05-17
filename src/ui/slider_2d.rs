@@ -63,7 +63,7 @@ pub fn color(
         stroke: Stroke::new(visuals.fg_stroke.width, picked_color.contrast().color32()),
     }));
 
-    response = response.on_hover_cursor(CursorIcon::Move);
+    response = response.on_hover_cursor(CursorIcon::Crosshair);
 
     response
 }
