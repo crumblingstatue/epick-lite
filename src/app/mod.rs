@@ -486,8 +486,6 @@ impl App {
                 self.harmonies_ctl_ui(ctx, ui);
                 ui.separator();
                 self.sliders(ctx, ui);
-                let available_space = ui.available_size_before_wrap();
-                ui.allocate_space(available_space);
             });
     }
 
