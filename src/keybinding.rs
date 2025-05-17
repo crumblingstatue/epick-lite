@@ -40,17 +40,6 @@ pub fn default_keybindings() -> KeyBindings {
     KeyBindings(
         [
             (
-                egui::Key::H,
-                KeyBinding {
-                    description: "toggle the side panel",
-                    str_key: "h",
-                    key: egui::Key::H,
-                    binding: Box::new(|ctx| {
-                        ctx.app.sidepanel.show = !ctx.app.sidepanel.show;
-                    }),
-                },
-            ),
-            (
                 egui::Key::P,
                 KeyBinding {
                     description: "pick a color from under the cursor",

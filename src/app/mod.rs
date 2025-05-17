@@ -366,12 +366,9 @@ impl App {
                 if let Some(rsp) = egui::Window::new("Error")
                     .collapsible(false)
                     .id(Id::new(format!("err_ntf_{err_idx}")))
-                    .anchor(
-                        egui::Align2::RIGHT_TOP,
-                        (-ctx.app.sidepanel.box_width - 25., top_padding),
-                    )
+                    .anchor(egui::Align2::RIGHT_TOP, (0., top_padding))
                     .hscroll(true)
-                    .fixed_size((ctx.app.sidepanel.box_width, 50.))
+                    .fixed_size((100.0, 50.))
                     .show(ui.ctx(), |ui| {
                         let label =
                             Label::new(RichText::new(e.message()).color(Color32::RED)).wrap();
@@ -489,10 +486,7 @@ impl App {
                 self.harmonies_ctl_ui(ctx, ui);
                 ui.separator();
                 self.sliders(ctx, ui);
-                let mut available_space = ui.available_size_before_wrap();
-                if ctx.app.sidepanel.show {
-                    available_space.x -= ctx.app.sidepanel.response_size.x;
-                }
+                let available_space = ui.available_size_before_wrap();
                 ui.allocate_space(available_space);
             });
     }

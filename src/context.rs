@@ -27,24 +27,7 @@ pub struct AppCtx {
     pub cursor_pick_color: Color,
     pub central_panel_tab: CentralPanelTab,
 
-    pub sidepanel: SidePanelData,
-
     pub show_zoom_window: bool,
-}
-
-#[derive(Clone, Debug, Serialize, Deserialize)]
-pub struct SidePanelData {
-    /// Is the side panel visible
-    pub show: bool,
-    /// If true palette name is currently being edited
-    pub edit_palette_name: bool,
-    /// When triggering palette name edit this is used to
-    /// switch focus to the textedit
-    pub trigger_edit_focus: bool,
-    /// Width of the button toolbar on the sidebar
-    pub box_width: f32,
-    /// Size of the whole Sidebar response
-    pub response_size: egui::Vec2,
 }
 
 impl Default for AppCtx {
@@ -61,13 +44,6 @@ impl Default for AppCtx {
             screen_size: ScreenSize::Desktop(0., 0.),
             cursor_pick_color: Color::black(),
             central_panel_tab: CentralPanelTab::Picker,
-            sidepanel: SidePanelData {
-                show: false,
-                edit_palette_name: false,
-                trigger_edit_focus: false,
-                box_width: 0.,
-                response_size: (0., 0.).into(),
-            },
 
             show_zoom_window: false,
         }
@@ -88,13 +64,6 @@ impl AppCtx {
             screen_size: ScreenSize::Desktop(0., 0.),
             cursor_pick_color: Color::black(),
             central_panel_tab: CentralPanelTab::Picker,
-            sidepanel: SidePanelData {
-                show: false,
-                edit_palette_name: false,
-                trigger_edit_focus: false,
-                box_width: 0.,
-                response_size: (0., 0.).into(),
-            },
 
             show_zoom_window: false,
         }
