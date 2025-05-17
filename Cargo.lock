@@ -777,7 +777,6 @@ dependencies = [
  "egui",
  "image",
  "nom 8.0.0",
- "once_cell",
  "serde",
  "serde_json",
  "serde_yaml",

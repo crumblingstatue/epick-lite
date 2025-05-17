@@ -26,18 +26,17 @@ use egui::{
     Button, Color32, CursorIcon, Id, Label, Layout, Margin, Rgba, RichText, ScrollArea, Ui, Vec2,
     Visuals,
 };
-use once_cell::sync::{Lazy, OnceCell};
 use serde::{Deserialize, Serialize};
-use std::sync::{Arc, RwLock};
+use std::sync::{Arc, LazyLock, OnceLock, RwLock};
 
 static ADD_DESCR: &str = "Add this color to saved colors";
 static ERROR_DISPLAY_DURATION: u64 = 20;
 
-pub static KEYBINDINGS: Lazy<KeyBindings> = Lazy::new(default_keybindings);
-pub static DARK_VISUALS: Lazy<Visuals> = Lazy::new(dark_visuals);
-pub static CONTEXT: OnceCell<RwLock<AppCtx>> = OnceCell::new();
-pub static TEXTURE_MANAGER: Lazy<RwLock<TextureManager>> =
-    Lazy::new(|| RwLock::new(TextureManager::default()));
+pub static KEYBINDINGS: LazyLock<KeyBindings> = LazyLock::new(default_keybindings);
+pub static DARK_VISUALS: LazyLock<Visuals> = LazyLock::new(dark_visuals);
+pub static CONTEXT: OnceLock<RwLock<AppCtx>> = OnceLock::new();
+pub static TEXTURE_MANAGER: LazyLock<RwLock<TextureManager>> =
+    LazyLock::new(|| RwLock::new(TextureManager::default()));
 
 pub const CURRENT_COLOR_BOX_SIZE: f32 = 40.0;
 
@@ -190,7 +189,7 @@ impl App {
                 .unwrap_or(DEFAULT_PIXELS_PER_POINT);
         }*/
 
-        CONTEXT.try_insert(RwLock::new(app_ctx)).unwrap();
+        CONTEXT.set(RwLock::new(app_ctx)).unwrap();
 
         app
     }

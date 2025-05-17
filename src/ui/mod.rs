@@ -35,43 +35,43 @@ pub mod icon {
 #[allow(dead_code)]
 pub mod colors {
     use egui::{Color32, Rgba};
-    use once_cell::sync::Lazy;
+    use std::sync::LazyLock;
 
-    pub static D_BG_00: Lazy<Color32> = Lazy::new(|| Color32::from_rgb(0x11, 0x16, 0x1b));
-    pub static D_BG_0: Lazy<Color32> = Lazy::new(|| Color32::from_rgb(0x16, 0x1c, 0x23));
-    pub static D_BG_1: Lazy<Color32> = Lazy::new(|| Color32::from_rgb(0x23, 0x2d, 0x38));
-    pub static D_BG_2: Lazy<Color32> = Lazy::new(|| Color32::from_rgb(0x31, 0x3f, 0x4e));
-    pub static D_BG_3: Lazy<Color32> = Lazy::new(|| Color32::from_rgb(0x41, 0x53, 0x67));
-    pub static D_FG_0: Lazy<Color32> = Lazy::new(|| Color32::from_rgb(0xe5, 0xde, 0xd6));
-    pub static D_BG_00_TRANSPARENT: Lazy<Color32> =
-        Lazy::new(|| Rgba::from(*D_BG_00).multiply(0.96).into());
-    pub static D_BG_0_TRANSPARENT: Lazy<Color32> =
-        Lazy::new(|| Rgba::from(*D_BG_0).multiply(0.96).into());
-    pub static D_BG_1_TRANSPARENT: Lazy<Color32> =
-        Lazy::new(|| Rgba::from(*D_BG_1).multiply(0.96).into());
-    pub static D_BG_2_TRANSPARENT: Lazy<Color32> =
-        Lazy::new(|| Rgba::from(*D_BG_2).multiply(0.96).into());
-    pub static D_BG_3_TRANSPARENT: Lazy<Color32> =
-        Lazy::new(|| Rgba::from(*D_BG_3).multiply(0.96).into());
-    pub static L_BG_0: Lazy<Color32> = Lazy::new(|| Color32::from_rgb(0xbf, 0xbf, 0xbf));
-    pub static L_BG_1: Lazy<Color32> = Lazy::new(|| Color32::from_rgb(0xd4, 0xd3, 0xd4));
-    pub static L_BG_2: Lazy<Color32> = Lazy::new(|| Color32::from_rgb(0xd9, 0xd9, 0xd9));
-    pub static L_BG_3: Lazy<Color32> = Lazy::new(|| Color32::from_rgb(0xea, 0xea, 0xea));
-    pub static L_BG_4: Lazy<Color32> = Lazy::new(|| Color32::from_rgb(0xf9, 0xf9, 0xf9));
-    pub static L_BG_5: Lazy<Color32> = Lazy::new(|| Color32::from_rgb(0xff, 0xff, 0xff));
-    pub static L_BG_0_TRANSPARENT: Lazy<Color32> =
-        Lazy::new(|| Rgba::from(*L_BG_0).multiply(0.86).into());
-    pub static L_BG_1_TRANSPARENT: Lazy<Color32> =
-        Lazy::new(|| Rgba::from(*L_BG_1).multiply(0.86).into());
-    pub static L_BG_2_TRANSPARENT: Lazy<Color32> =
-        Lazy::new(|| Rgba::from(*L_BG_2).multiply(0.86).into());
-    pub static L_BG_3_TRANSPARENT: Lazy<Color32> =
-        Lazy::new(|| Rgba::from(*L_BG_3).multiply(0.86).into());
-    pub static L_BG_4_TRANSPARENT: Lazy<Color32> =
-        Lazy::new(|| Rgba::from(*L_BG_4).multiply(0.86).into());
-    pub static L_BG_5_TRANSPARENT: Lazy<Color32> =
-        Lazy::new(|| Rgba::from(*L_BG_5).multiply(0.86).into());
-    pub static L_FG_0: Lazy<Color32> = Lazy::new(|| *D_BG_0);
+    pub static D_BG_00: LazyLock<Color32> = LazyLock::new(|| Color32::from_rgb(0x11, 0x16, 0x1b));
+    pub static D_BG_0: LazyLock<Color32> = LazyLock::new(|| Color32::from_rgb(0x16, 0x1c, 0x23));
+    pub static D_BG_1: LazyLock<Color32> = LazyLock::new(|| Color32::from_rgb(0x23, 0x2d, 0x38));
+    pub static D_BG_2: LazyLock<Color32> = LazyLock::new(|| Color32::from_rgb(0x31, 0x3f, 0x4e));
+    pub static D_BG_3: LazyLock<Color32> = LazyLock::new(|| Color32::from_rgb(0x41, 0x53, 0x67));
+    pub static D_FG_0: LazyLock<Color32> = LazyLock::new(|| Color32::from_rgb(0xe5, 0xde, 0xd6));
+    pub static D_BG_00_TRANSPARENT: LazyLock<Color32> =
+        LazyLock::new(|| Rgba::from(*D_BG_00).multiply(0.96).into());
+    pub static D_BG_0_TRANSPARENT: LazyLock<Color32> =
+        LazyLock::new(|| Rgba::from(*D_BG_0).multiply(0.96).into());
+    pub static D_BG_1_TRANSPARENT: LazyLock<Color32> =
+        LazyLock::new(|| Rgba::from(*D_BG_1).multiply(0.96).into());
+    pub static D_BG_2_TRANSPARENT: LazyLock<Color32> =
+        LazyLock::new(|| Rgba::from(*D_BG_2).multiply(0.96).into());
+    pub static D_BG_3_TRANSPARENT: LazyLock<Color32> =
+        LazyLock::new(|| Rgba::from(*D_BG_3).multiply(0.96).into());
+    pub static L_BG_0: LazyLock<Color32> = LazyLock::new(|| Color32::from_rgb(0xbf, 0xbf, 0xbf));
+    pub static L_BG_1: LazyLock<Color32> = LazyLock::new(|| Color32::from_rgb(0xd4, 0xd3, 0xd4));
+    pub static L_BG_2: LazyLock<Color32> = LazyLock::new(|| Color32::from_rgb(0xd9, 0xd9, 0xd9));
+    pub static L_BG_3: LazyLock<Color32> = LazyLock::new(|| Color32::from_rgb(0xea, 0xea, 0xea));
+    pub static L_BG_4: LazyLock<Color32> = LazyLock::new(|| Color32::from_rgb(0xf9, 0xf9, 0xf9));
+    pub static L_BG_5: LazyLock<Color32> = LazyLock::new(|| Color32::from_rgb(0xff, 0xff, 0xff));
+    pub static L_BG_0_TRANSPARENT: LazyLock<Color32> =
+        LazyLock::new(|| Rgba::from(*L_BG_0).multiply(0.86).into());
+    pub static L_BG_1_TRANSPARENT: LazyLock<Color32> =
+        LazyLock::new(|| Rgba::from(*L_BG_1).multiply(0.86).into());
+    pub static L_BG_2_TRANSPARENT: LazyLock<Color32> =
+        LazyLock::new(|| Rgba::from(*L_BG_2).multiply(0.86).into());
+    pub static L_BG_3_TRANSPARENT: LazyLock<Color32> =
+        LazyLock::new(|| Rgba::from(*L_BG_3).multiply(0.86).into());
+    pub static L_BG_4_TRANSPARENT: LazyLock<Color32> =
+        LazyLock::new(|| Rgba::from(*L_BG_4).multiply(0.86).into());
+    pub static L_BG_5_TRANSPARENT: LazyLock<Color32> =
+        LazyLock::new(|| Rgba::from(*L_BG_5).multiply(0.86).into());
+    pub static L_FG_0: LazyLock<Color32> = LazyLock::new(|| *D_BG_0);
 }
 use colors::*;
 use egui::epaint::Shadow;

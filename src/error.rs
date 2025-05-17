@@ -1,6 +1,8 @@
 use crate::get_timestamp;
-use once_cell::sync::Lazy;
-use std::{collections::VecDeque, sync::Mutex};
+use std::{
+    collections::VecDeque,
+    sync::{LazyLock, Mutex},
+};
 
 #[derive(Debug)]
 pub struct DisplayError {
@@ -36,7 +38,8 @@ impl ErrorStack {
     }
 }
 
-pub static ERROR_STACK: Lazy<Mutex<ErrorStack>> = Lazy::new(|| Mutex::new(ErrorStack::default()));
+pub static ERROR_STACK: LazyLock<Mutex<ErrorStack>> =
+    LazyLock::new(|| Mutex::new(ErrorStack::default()));
 
 pub fn append_global_error(error: impl std::fmt::Display) {
     if let Ok(mut stack) = ERROR_STACK.try_lock() {
