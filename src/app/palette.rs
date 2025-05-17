@@ -202,6 +202,7 @@ impl App {
                 for (i, color) in palette.palette.iter().enumerate() {
                     let resp = drop_target(ui, true, |ui| {
                         let color_id = Id::new(&palette.name).with(i);
+                        let is_current = &ctx.app.current_selected_color == color;
                         let cb = ColorBox::builder()
                             .size((
                                 ctx.app.palettes_tab_color_size,
@@ -221,6 +222,15 @@ impl App {
                                             pal_idx: index,
                                             col_idx: i,
                                         },
+                                    );
+                                }
+                                // Highlight currently selected color
+                                if is_current {
+                                    ui.painter().rect_stroke(
+                                        re.rect,
+                                        2,
+                                        egui::Stroke::new(2.0, egui::Color32::LIGHT_YELLOW),
+                                        egui::StrokeKind::Outside,
                                     );
                                 }
                                 if ui.ctx().dragged_id() == Some(re.id)
