@@ -1,6 +1,4 @@
-use crate::{
-    color::Color, context::FrameCtx, render::render_color, save_to_clipboard, ui::color_tooltip,
-};
+use crate::{color::Color, context::FrameCtx, render::render_color, ui::color_tooltip};
 
 use egui::Ui;
 
@@ -80,7 +78,7 @@ impl ColorBox {
             }
 
             if resp.secondary_clicked() {
-                let _ = save_to_clipboard(ctx.app.clipboard_color(&color));
+                ui.ctx().copy_text(ctx.app.clipboard_color(&color));
             }
             return Some(resp);
         }

@@ -151,7 +151,7 @@ impl PaletteFormatsWindow {
             .show(ui);
 
         if ui.button("copy").clicked() {
-            let _ = crate::save_to_clipboard(preview);
+            ui.ctx().copy_text(preview);
         }
 
         if name_before_edit != current.name || format_before_edit != current.format {

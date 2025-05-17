@@ -8,7 +8,6 @@ use crate::{
     error::{DisplayError, ERROR_STACK, append_global_error},
     keybinding::{KeyBindings, default_keybindings},
     render::{TextureManager, render_gradient},
-    save_to_clipboard,
     screen_size::ScreenSize,
     settings::{self},
     ui::{
@@ -413,19 +412,17 @@ impl App {
                         );
                         ui.label(ctx.app.clipboard_color(&ctx.app.picker.current_color));
                     };
-                    if (ui
+                    if ui
                         .button(icon::COPY)
                         .on_hover_ui(hover_ui)
                         .on_hover_cursor(CursorIcon::Alias)
                         .clicked()
                         || ui.input(|inp| {
                             inp.events.iter().any(|ev| matches!(ev, egui::Event::Copy))
-                        }))
-                        && let Err(e) = save_to_clipboard(
-                            ctx.app.clipboard_color(&ctx.app.picker.current_color),
-                        )
+                        })
                     {
-                        append_global_error(format!("Failed to save color to clipboard - {e}"));
+                        ui.ctx()
+                            .copy_text(ctx.app.clipboard_color(&ctx.app.picker.current_color))
                     }
                     if ui
                         .button(icon::ADD)

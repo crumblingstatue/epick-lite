@@ -12,15 +12,6 @@ mod settings;
 mod ui;
 mod zoom_picker;
 
-use anyhow::{Context, Error};
-
-fn save_to_clipboard(text: String) -> Result<(), Error> {
-    let mut clipboard = arboard::Clipboard::new()?;
-    clipboard
-        .set_text(text)
-        .context("failed to save to clipboard")
-}
-
 fn get_timestamp() -> u64 {
     use std::time::{SystemTime, UNIX_EPOCH};
     SystemTime::now()

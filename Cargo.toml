@@ -18,7 +18,6 @@ ron = "0.10"
 dirs = "6"
 nom = "8"
 image = "0.25.1"
-arboard = "3.3.2"
 x11rb = { version = "0.13", features = ["image", "cursor", "resource_manager"] }
 
 [dev-dependencies]

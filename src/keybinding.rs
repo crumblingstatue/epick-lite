@@ -1,4 +1,4 @@
-use crate::{context::FrameCtx, save_to_clipboard};
+use crate::context::FrameCtx;
 
 use std::collections::HashMap;
 
@@ -60,7 +60,7 @@ pub fn default_keybindings() -> KeyBindings {
                         ctx.app.picker.set_cur_color(ctx.app.cursor_pick_color);
                         if ctx.app.settings.auto_copy_picked_color {
                             let color = ctx.app.cursor_pick_color;
-                            let _ = save_to_clipboard(ctx.app.clipboard_color(&color));
+                            ctx.egui.copy_text(ctx.app.clipboard_color(&color));
                         }
                     }),
                 },

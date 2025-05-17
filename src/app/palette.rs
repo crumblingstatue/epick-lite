@@ -2,7 +2,6 @@ use crate::{
     app::App,
     color::NamedPalette,
     context::FrameCtx,
-    save_to_clipboard,
     ui::{
         SPACE,
         colorbox::{COLORBOX_DRAG_TOOLTIP, ColorBox},
@@ -171,7 +170,7 @@ impl App {
                 .on_hover_cursor(CursorIcon::Alias)
                 .clicked()
             {
-                let _ = save_to_clipboard(palette.display(
+                ui.ctx().copy_text(palette.display(
                     &ctx.app.settings.palette_clipboard_format,
                     ctx.app.settings.rgb_working_space,
                     ctx.app.settings.illuminant,
