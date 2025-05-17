@@ -26,3 +26,4 @@ pretty_assertions = "1.4"
 [profile.release]
 panic = "abort"
 strip = true
+lto = "thin"
