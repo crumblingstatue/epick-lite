@@ -8,6 +8,7 @@ use crate::{
 
 use anyhow::{Context, Result};
 use eframe::Storage;
+use ron::ser::PrettyConfig;
 use serde::{Deserialize, Serialize};
 use std::{
     collections::HashMap,
@@ -198,19 +199,19 @@ impl Default for Settings {
 }
 
 impl Settings {
-    pub const FILE_NAME: &'static str = "settings.yaml";
+    pub const FILE_NAME: &'static str = "settings.ron";
 
     /// Loads the settings from the configuration file located at `path`. The configuration file is
-    /// expected to be a valid YAML file.
+    /// expected to be a valid ron file.
     pub fn load(path: impl AsRef<Path>) -> Result<Self> {
-        let data = fs::read(path).context("failed to read configuration file")?;
-        serde_yaml::from_slice(&data).context("failed to deserialize configuration")
+        let data = fs::read_to_string(path).context("failed to read configuration file")?;
+        ron::from_str(&data).context("Failed to parse configuration file")
     }
 
-    /// Saves this settings as YAML file in the provided `path`.
+    /// Saves this settings as ron file in the provided `path`.
     pub fn save(&self, path: impl AsRef<Path>) -> Result<()> {
-        let mut data = Vec::with_capacity(128);
-        serde_yaml::to_writer(&mut data, &self).context("failed to serialize settings")?;
+        let mut data = String::with_capacity(128);
+        ron::ser::to_writer_pretty(&mut data, self, PrettyConfig::default())?;
         fs::write(path, &data).context("failed to write settings to file")
     }
 
@@ -276,21 +277,21 @@ mod tests {
     #[test]
     fn loads_settings() {
         let tmp = tempfile::TempDir::new().unwrap();
-        let settings_str = r#"color_display_format: !custom rgb
-color_clipboard_format: null
-palette_clipboard_format: HexList
-saved_color_formats:
-  rgb: '{r} {g} {b}'
-color_spaces:
-  hsv: false
-  luv: true
-  lab: true
-rgb_working_space: Adobe
-chromatic_adaptation_method: VonKries
-illuminant: D50
-harmony_layout: gradient
-"#;
-        let path = tmp.path().join("settings.yaml");
+        let settings_str = r#"(
+    color_display_format: hex,
+    color_clipboard_format: None,
+    palette_clipboard_format: HexList,
+    color_spaces: (
+        hsv: false,
+        luv: true,
+        lab: true,
+    ),
+    rgb_working_space: Adobe,
+    chromatic_adaptation_method: VonKries,
+    illuminant: D50,
+    harmony_layout: gradient,
+)"#;
+        let path = tmp.path().join("settings.ron");
         fs::write(&path, settings_str).unwrap();
 
         let settings = Settings::load(&path).unwrap();
@@ -316,9 +317,9 @@ harmony_layout: gradient
         assert!(eq_f32(settings.harmony_color_size, DEFAULT_COLOR_SIZE));
         assert!(!settings.harmony_display_color_label);
 
-        let path = tmp.path().join("new_settings.yaml");
+        let path = tmp.path().join("new_settings.ron");
         settings.save(&path).unwrap();
 
-        assert_eq!(fs::read_to_string(&path).unwrap(), settings_str);
+        pretty_assertions::assert_eq!(fs::read_to_string(&path).unwrap(), settings_str);
     }
 }

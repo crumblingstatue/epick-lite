@@ -14,7 +14,7 @@ eframe = { version = "0.31.0", default-features=false, features = ["glow", "x11"
 egui = { version = "0.31.0" }
 anyhow = "1"
 serde = { version = "1", features = ["derive"] }
-serde_yaml = "0.9"
+ron = "0.10"
 serde_json = "1"
 dirs = "6"
 nom = "8"
@@ -24,6 +24,7 @@ x11rb = { version = "0.13", features = ["image", "cursor", "resource_manager"] }
 
 [dev-dependencies]
 tempfile = "3"
+pretty_assertions = "1.4"
 
 [profile.release]
 panic = "abort"
