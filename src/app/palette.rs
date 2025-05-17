@@ -202,7 +202,7 @@ impl App {
                 for (i, color) in palette.palette.iter().enumerate() {
                     let resp = drop_target(ui, true, |ui| {
                         let color_id = Id::new(&palette.name).with(i);
-                        let is_current = &ctx.app.current_selected_color == color;
+                        let is_current = &ctx.app.picker.current_color == color;
                         let cb = ColorBox::builder()
                             .size((
                                 ctx.app.palettes_tab_color_size,

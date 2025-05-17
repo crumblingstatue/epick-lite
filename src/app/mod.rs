@@ -125,8 +125,6 @@ impl eframe::App for App {
                 // Otherwise sleep to save some cycles
                 std::thread::sleep(std::time::Duration::from_millis(100));
             }
-
-            ctx.app.current_selected_color = ctx.app.picker.current_color;
         }
     }
 

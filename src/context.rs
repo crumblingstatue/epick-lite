@@ -25,8 +25,6 @@ pub struct AppCtx {
     pub screen_size: ScreenSize,
     /// Color under cursor
     pub cursor_pick_color: Color,
-    /// Currently selected color in the picker
-    pub current_selected_color: Color,
     pub central_panel_tab: CentralPanelTab,
 
     pub sidepanel: SidePanelData,
@@ -62,7 +60,6 @@ impl Default for AppCtx {
 
             screen_size: ScreenSize::Desktop(0., 0.),
             cursor_pick_color: Color::black(),
-            current_selected_color: Color::black(),
             central_panel_tab: CentralPanelTab::Picker,
             sidepanel: SidePanelData {
                 show: false,
@@ -90,7 +87,6 @@ impl AppCtx {
 
             screen_size: ScreenSize::Desktop(0., 0.),
             cursor_pick_color: Color::black(),
-            current_selected_color: Color::black(),
             central_panel_tab: CentralPanelTab::Picker,
             sidepanel: SidePanelData {
                 show: false,
