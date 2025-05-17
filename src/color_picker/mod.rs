@@ -536,4 +536,14 @@ impl ColorPicker {
                 ui.end_row();
             });
     }
+
+    pub(crate) fn egui(&mut self, ui: &mut Ui) {
+        let mut c32 = self.current_color.color32();
+        egui::widgets::color_picker::color_picker_color32(
+            ui,
+            &mut c32,
+            egui::widgets::color_picker::Alpha::Opaque,
+        );
+        self.set_cur_color(c32);
+    }
 }

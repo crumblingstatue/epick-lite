@@ -500,7 +500,7 @@ impl App {
     fn sliders(&mut self, ctx: &mut FrameCtx<'_>, ui: &mut Ui) {
         ui.horizontal(|ui| {
             let sliders = [
-                "HSV", "RGB", "CMYK", "HSL", "LUV", "LCH_UV", "LAB", "LCH_AB",
+                "HSV", "RGB", "CMYK", "HSL", "LUV", "LCH_UV", "LAB", "LCH_AB", "egui",
             ];
             for (i, name) in sliders.into_iter().enumerate() {
                 if ui
@@ -520,6 +520,7 @@ impl App {
             5 => ctx.app.picker.lch_uv_sliders(ui),
             6 => ctx.app.picker.lab_sliders(ui),
             7 => ctx.app.picker.lch_ab_sliders(ui),
+            8 => ctx.app.picker.egui(ui),
             _ => {}
         }
     }
