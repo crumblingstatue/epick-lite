@@ -439,10 +439,10 @@ impl App {
                     let color_edit_id = egui::Id::new("color-edit-popup");
                     let mut just_clicked = false;
                     if re.clicked() {
-                        ui.memory_mut(|mem| mem.open_popup(color_edit_id));
+                        egui::Popup::open_id(ctx.egui, color_edit_id);
                         just_clicked = true;
                     }
-                    custom_popup_below_widget(ui, color_edit_id, &re, 100.0, |ui| {
+                    custom_popup_below_widget(ctx.egui, color_edit_id, &re, 100.0, |ui| {
                         ui.horizontal(|ui| {
                             let resp = ui.text_edit_singleline(&mut ctx.app.picker.hex_color);
                             if just_clicked {
@@ -469,7 +469,7 @@ impl App {
                                         "The entered hex color is not valid".to_owned(),
                                     );
                                 }
-                                ui.memory_mut(|mem| mem.close_popup());
+                                egui::Popup::close_id(ctx.egui, color_edit_id);
                             }
                             if ui
                                 .button(icon::ADD)
@@ -635,20 +635,20 @@ fn color_format_selection_fill<'a, T: From<ColorDisplayFmtEnum> + PartialEq>(
 }
 
 pub fn custom_popup_below_widget<R>(
-    ui: &Ui,
+    ctx: &egui::Context,
     popup_id: Id,
     widget_response: &egui::Response,
     width: f32,
     add_contents: impl FnOnce(&mut Ui) -> R,
 ) -> Option<R> {
-    if ui.memory(|mem| mem.is_popup_open(popup_id)) {
+    if egui::Popup::is_id_open(ctx, popup_id) {
         let (pos, pivot) = (widget_response.rect.left_bottom(), egui::Align2::LEFT_TOP);
         let re = egui::Area::new(popup_id)
             .order(egui::Order::Foreground)
             .constrain(true)
             .fixed_pos(pos)
             .pivot(pivot)
-            .show(ui.ctx(), |ui| {
+            .show(ctx, |ui| {
                 let frame = egui::Frame::popup(ui.style());
                 frame
                     .show(ui, |ui| {
@@ -661,7 +661,7 @@ pub fn custom_popup_below_widget<R>(
                     .inner
             });
         if widget_response.clicked_elsewhere() && re.response.clicked_elsewhere() {
-            ui.memory_mut(|mem| mem.close_popup());
+            egui::Popup::close_id(ctx, popup_id);
         }
         Some(re.inner)
     } else {

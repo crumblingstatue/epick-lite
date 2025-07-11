@@ -266,7 +266,6 @@ impl App {
                                             pal_idx: index,
                                             col_idx: i,
                                         });
-                                        ui.close_menu();
                                     }
                                 });
                             }

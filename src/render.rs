@@ -75,6 +75,7 @@ impl TextureManager {
             let height = 1;
             let color_image = ColorImage {
                 size: [width, height],
+                source_size: egui::vec2(width as f32, height as f32),
                 pixels,
             };
             let image_data = ImageData::Color(Arc::new(color_image));

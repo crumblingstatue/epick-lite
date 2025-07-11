@@ -68,6 +68,7 @@ impl ZoomPicker {
         ) {
             let image = egui::ColorImage {
                 size: [img.width() as usize, img.height() as usize],
+                source_size: egui::vec2(f32::from(img.width()), f32::from(img.height())),
                 pixels: img
                     .data()
                     .chunks(4)
@@ -108,15 +109,15 @@ impl ZoomPicker {
         if ctx.app.show_zoom_window {
             let rect = re.rect;
             let pos = egui::pos2(rect.min.x, rect.max.y);
-            egui::show_tooltip_at(
-                ctx.egui,
+            egui::Tooltip::always_open(
+                ctx.egui.clone(),
                 ui.layer_id(),
                 egui::Id::new("zoomed-tooltip"),
                 pos,
-                |ui| {
-                    self.handle_zoom_picker(ui, picker);
-                },
-            );
+            )
+            .show(|ui| {
+                self.handle_zoom_picker(ui, picker);
+            });
         }
     }
 }
