@@ -25,12 +25,14 @@ const ZOOM_IMAGE_Y_OFFSET: i32 = ((ZOOM_WIN_HEIGHT / 2) as f32 / ZOOM_SCALE) as 
 
 pub struct ZoomPicker {
     pub display_picker: Option<Rc<X11DisplayPicker>>,
+    pub offset: [i8; 2],
 }
 
 impl Default for ZoomPicker {
     fn default() -> Self {
         Self {
             display_picker: crate::display_picker::init_display_picker(),
+            offset: [0; 2],
         }
     }
 }
@@ -49,7 +51,12 @@ impl ZoomPicker {
                     .border(true)
                     .build();
                 cb.display(ctx, ui);
-                ui.label("At cursor");
+                let text = "Color pick offset from pointer.\n\
+                            Sometimes necessary because a virtual cursor can obscure \
+                            the pixels underneath.";
+                ui.label("Offset").on_hover_text(text);
+                ui.add(egui::DragValue::new(&mut self.offset[0]));
+                ui.add(egui::DragValue::new(&mut self.offset[1]));
                 self.zoom_picker_impl(ctx, ui, picker);
             });
         };
@@ -59,10 +66,12 @@ impl ZoomPicker {
         use egui::{Color32, ColorImage, ImageSource, TextureOptions};
 
         let cursor_pos = picker.get_cursor_pos().unwrap_or_default();
+        let off_x = i32::from(self.offset[0]);
+        let off_y = i32::from(self.offset[1]);
         if let Ok(img) = picker.get_image(
             picker.screen().root,
-            (cursor_pos.0 - ZOOM_IMAGE_X_OFFSET) as i16,
-            (cursor_pos.1 - ZOOM_IMAGE_Y_OFFSET) as i16,
+            ((cursor_pos.0 + off_x) - ZOOM_IMAGE_X_OFFSET) as i16,
+            ((cursor_pos.1 + off_y) - ZOOM_IMAGE_Y_OFFSET) as i16,
             ZOOM_IMAGE_WIDTH,
             ZOOM_IMAGE_HEIGHT,
         ) {
