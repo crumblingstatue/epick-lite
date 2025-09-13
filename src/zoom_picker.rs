@@ -2,7 +2,7 @@
 use crate::{
     app::CURRENT_COLOR_BOX_SIZE,
     context::FrameCtx,
-    display_picker::{self, DisplayPickerExt},
+    display_picker::{self, X11DisplayPicker},
     error::append_global_error,
     ui::{
         colorbox::{COLORBOX_PICK_TOOLTIP, ColorBox},
@@ -24,7 +24,7 @@ const ZOOM_IMAGE_X_OFFSET: i32 = ((ZOOM_WIN_WIDTH / 2) as f32 / ZOOM_SCALE) as i
 const ZOOM_IMAGE_Y_OFFSET: i32 = ((ZOOM_WIN_HEIGHT / 2) as f32 / ZOOM_SCALE) as i32;
 
 pub struct ZoomPicker {
-    pub display_picker: Option<Rc<dyn DisplayPickerExt>>,
+    pub display_picker: Option<Rc<X11DisplayPicker>>,
 }
 
 impl Default for ZoomPicker {
@@ -55,7 +55,7 @@ impl ZoomPicker {
         };
     }
 
-    fn handle_zoom_picker(&mut self, ui: &mut Ui, picker: Rc<dyn DisplayPickerExt>) {
+    fn handle_zoom_picker(&mut self, ui: &mut Ui, picker: Rc<X11DisplayPicker>) {
         use egui::{Color32, ColorImage, ImageSource, TextureOptions};
 
         let cursor_pos = picker.get_cursor_pos().unwrap_or_default();
@@ -102,7 +102,7 @@ impl ZoomPicker {
         &mut self,
         ctx: &mut FrameCtx<'_>,
         ui: &mut Ui,
-        picker: Rc<dyn DisplayPickerExt>,
+        picker: Rc<X11DisplayPicker>,
     ) {
         let re = ui.checkbox(&mut ctx.app.show_zoom_window, "Zoom window");
 
