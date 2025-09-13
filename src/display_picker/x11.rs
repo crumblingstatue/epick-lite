@@ -10,7 +10,14 @@ use x11rb::{
 
 pub trait DisplayPickerExt: DisplayPicker {
     fn flush(&self) -> Result<()>;
-    fn get_image(&self, window: Window, x: i16, y: i16, width: u16, height: u16) -> Result<Image>;
+    fn get_image(
+        &self,
+        window: Window,
+        x: i16,
+        y: i16,
+        width: u16,
+        height: u16,
+    ) -> Result<Image<'_>>;
     fn screen(&self) -> &Screen;
 }
 
@@ -45,7 +52,7 @@ impl X11Conn {
         y: i16,
         width: u16,
         height: u16,
-    ) -> Result<Image> {
+    ) -> Result<Image<'_>> {
         Image::get(&self.conn, window, x, y, width, height)
             .map(|tup| tup.0)
             .context("failed to get image")
@@ -107,7 +114,14 @@ impl DisplayPickerExt for X11Conn {
     fn flush(&self) -> Result<()> {
         self.flush()
     }
-    fn get_image(&self, window: Window, x: i16, y: i16, width: u16, height: u16) -> Result<Image> {
+    fn get_image(
+        &self,
+        window: Window,
+        x: i16,
+        y: i16,
+        width: u16,
+        height: u16,
+    ) -> Result<Image<'_>> {
         self.get_image(window, x, y, width, height)
     }
     fn screen(&self) -> &Screen {

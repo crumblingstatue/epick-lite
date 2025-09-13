@@ -70,7 +70,7 @@ impl AppCtx {
     }
 
     /// Current color display format
-    pub fn display_format(&self) -> ColorFormat {
+    pub fn display_format(&self) -> ColorFormat<'_> {
         match self.settings.color_display_format {
             ColorDisplayFmtEnum::Hex => ColorFormat::Hex,
             ColorDisplayFmtEnum::HexUppercase => ColorFormat::HexUpercase,

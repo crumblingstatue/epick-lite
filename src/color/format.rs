@@ -496,11 +496,11 @@ fn parse_text(i: &str) -> IResult<&str, &str, ColorParseError<&str>> {
     take_while(is_not_variable_start)(i)
 }
 
-fn parse_brace(i: &str) -> IResult<&str, FormatToken, ColorParseError<&str>> {
+fn parse_brace(i: &str) -> IResult<&str, FormatToken<'_>, ColorParseError<&str>> {
     map(tag("{"), FormatToken::Text).parse(i)
 }
 
-fn parse_format_token(i: &str) -> IResult<&str, FormatToken, ColorParseError<&str>> {
+fn parse_format_token(i: &str) -> IResult<&str, FormatToken<'_>, ColorParseError<&str>> {
     alt((
         map(parse_color_field, FormatToken::Color),
         parse_brace,
@@ -509,7 +509,7 @@ fn parse_format_token(i: &str) -> IResult<&str, FormatToken, ColorParseError<&st
     .parse(i)
 }
 
-fn parse_color_format(i: &str) -> IResult<&str, CustomColorFormat, ColorParseError<&str>> {
+fn parse_color_format(i: &str) -> IResult<&str, CustomColorFormat<'_>, ColorParseError<&str>> {
     map(many0(parse_format_token), CustomColorFormat).parse(i)
 }
 
