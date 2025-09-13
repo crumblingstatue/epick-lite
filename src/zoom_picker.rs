@@ -39,7 +39,7 @@ impl Default for ZoomPicker {
 impl ZoomPicker {
     pub fn display(&mut self, ctx: &mut FrameCtx<'_>, ui: &mut Ui) {
         if let Some(picker) = self.display_picker.clone()
-            && let Ok(color) = picker.get_color_under_cursor()
+            && let Ok(color) = picker.get_color_under_cursor(self.offset)
         {
             ctx.app.cursor_pick_color = color;
             ui.horizontal(|ui| {
@@ -55,8 +55,8 @@ impl ZoomPicker {
                             Sometimes necessary because a virtual cursor can obscure \
                             the pixels underneath.";
                 ui.label("Offset").on_hover_text(text);
-                ui.add(egui::DragValue::new(&mut self.offset[0]));
-                ui.add(egui::DragValue::new(&mut self.offset[1]));
+                ui.add(egui::DragValue::new(&mut self.offset[0]).speed(0.05));
+                ui.add(egui::DragValue::new(&mut self.offset[1]).speed(0.05));
                 self.zoom_picker_impl(ctx, ui, picker);
             });
         };
@@ -66,12 +66,10 @@ impl ZoomPicker {
         use egui::{Color32, ColorImage, ImageSource, TextureOptions};
 
         let cursor_pos = picker.get_cursor_pos().unwrap_or_default();
-        let off_x = i32::from(self.offset[0]);
-        let off_y = i32::from(self.offset[1]);
         if let Ok(img) = picker.get_image(
             picker.screen().root,
-            ((cursor_pos.0 + off_x) - ZOOM_IMAGE_X_OFFSET) as i16,
-            ((cursor_pos.1 + off_y) - ZOOM_IMAGE_Y_OFFSET) as i16,
+            ((cursor_pos.0) - ZOOM_IMAGE_X_OFFSET) as i16,
+            ((cursor_pos.1) - ZOOM_IMAGE_Y_OFFSET) as i16,
             ZOOM_IMAGE_WIDTH,
             ZOOM_IMAGE_HEIGHT,
         ) {
@@ -95,8 +93,13 @@ impl ZoomPicker {
                 egui::vec2((img.width() * 10) as f32, (img.height() * 10) as f32),
             ));
             let painter = ui.painter_at(re.rect);
+            let circle_offset = re.rect.center()
+                + egui::vec2(
+                    f32::from(self.offset[0]) * 10.0,
+                    f32::from(self.offset[1]) * 10.0,
+                );
             painter.circle(
-                re.rect.center() + egui::vec2(5.0, 5.0),
+                circle_offset + egui::vec2(5.0, 5.0),
                 5.0,
                 egui::Color32::TRANSPARENT,
                 egui::Stroke::new(1.0, egui::Color32::WHITE),

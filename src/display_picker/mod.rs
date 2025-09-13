@@ -84,21 +84,25 @@ impl X11DisplayPicker {
         Ok((red as u8, green as u8, blue as u8))
     }
 
-    pub fn get_color_for_screen(&self, screen: &Screen) -> Result<(u8, u8, u8)> {
+    pub fn get_color_for_screen(
+        &self,
+        screen: &Screen,
+        [x_off, y_off]: [i8; 2],
+    ) -> Result<(u8, u8, u8)> {
         let (x, y) = self.get_cursor_xy(screen.root)?;
-        self.get_color(screen.root, x, y)
+        self.get_color(screen.root, x + i16::from(x_off), y + i16::from(y_off))
     }
 
-    pub fn get_color_for_conn(&self) -> Result<(u8, u8, u8)> {
-        self.get_color_for_screen(self.screen())
+    pub fn get_color_for_conn(&self, offset: [i8; 2]) -> Result<(u8, u8, u8)> {
+        self.get_color_for_screen(self.screen(), offset)
     }
     pub fn get_cursor_pos(&self) -> Result<(i32, i32)> {
         self.get_cursor_xy(self.screen().root)
             .map(|(x, y)| (x as i32, y as i32))
     }
 
-    pub fn get_color_under_cursor(&self) -> Result<Color> {
-        self.get_color_for_conn()
+    pub fn get_color_under_cursor(&self, offset: [i8; 2]) -> Result<Color> {
+        self.get_color_for_conn(offset)
             .map(|color| Color32::from_rgb(color.0, color.1, color.2).into())
     }
 }
